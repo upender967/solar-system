@@ -11,18 +11,34 @@ pipeline {
         }
 
 	stage ('Dependency Check'){
-		
-		steps {
+		parallel{
+			stage('NPM dependency check')
+				{
+				steps {
+                                    	sh '''
+					   npm audit --audit-level=critical
+					   echo $?
+					'''	
+				      }
+				}
+ 		
+			stage ('OWASP Check')
+				{
+
+				steps {
+
 			dependencyCheck additionalArguments: '''
 				--scan \'./\'
 				--out  \'./\'
 				--format \'ALL\'
 			        --prettyPrint''', odcInstallation: 'OWASP-10'
 			
+				dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml', stopBuild: true
+				      }
+				}
 
-		}		
+                        }		
+		}
 
-	}
-
-    }
+    	}
 }
