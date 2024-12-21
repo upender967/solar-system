@@ -7,6 +7,7 @@ pipeline {
                 sh '''
                     node -v
                     npm -v
+	            echo 'this is for testing'
                 '''
             }
         }
