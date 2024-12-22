@@ -85,9 +85,9 @@ pipeline {
 					sonar-scanner \
   					-Dsonar.projectKey=SolarSystem-Project \
   					-Dsonar.sources=. \
-  					
+  					}
 				'''
-						}
+						
 
 		}
 
