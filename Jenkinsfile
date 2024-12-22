@@ -79,7 +79,7 @@ pipeline {
 
 		steps {
 
-			withSonarQubeEnv('sonarqube-server'){	
+			withSonarQubeEnv('sonarqube-server1'){	
 				sh '''
 				
    						 
