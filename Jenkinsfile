@@ -67,7 +67,7 @@ pipeline {
     					sh 'npm run coverage' 
 			}
 			
-			publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: '/coverage/lcov-report', reportFiles: 'index.html', reportName: 'Coverage Report', reportTitles: '', useWrapperFileDirectly: true])	
+			publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Coverage Report', reportTitles: '', useWrapperFileDirectly: true])	
 		}
 			
 			
