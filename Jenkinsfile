@@ -72,6 +72,24 @@ pipeline {
 			
 			
 	
+	}
+
+     stage ('SonarQube Stage'){
+
+		steps {
+
+
+			withSonarQubeEnv(installationName: 'sonarqube-server') {
+    
+						sonar-scanner \
+  					-Dsonar.projectKey=SolarSystem-Project \
+  					-Dsonar.sources=. \
+  					
+
+						}
+
+		}
+
 	}	
 	    
 
