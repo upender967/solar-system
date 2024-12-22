@@ -91,6 +91,8 @@ pipeline {
   					-Dsonar.login=sqp_97f24bea85dda8f091d1fd97ee0d6e75bf0d8108
   					
 				'''
+
+			waitForQualityGate abortPipeline: true
 			//		}	
 
 		}
