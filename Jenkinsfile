@@ -58,6 +58,20 @@ pipeline {
 		
 		}
 
+	}
+	
+	stage ('Coverage Check'){
+
+		steps {
+                       catchError(buildResult: 'SUCCESS', message: 'Will fix this in next release', stageResult: 'UNSTABLE') {
+    					sh 'npm run coverage' 
+			}
+			
+
+		}
+			publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: '/coverage/lcov-report', reportFiles: 'index.html', reportName: 'Coverage Report', reportTitles: '', useWrapperFileDirectly: true])
+			
+	
 	}	
 	    
 
