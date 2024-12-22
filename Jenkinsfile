@@ -40,7 +40,7 @@ pipeline {
 			
 				dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml', stopBuild: true
 				
-				junit allowEmptyResults: true, stdioRetention: '', testResults: 'dependency-check-junit.xml'
+				
 				      }
 				}
 
@@ -53,7 +53,7 @@ pipeline {
 			
     			sh 'npm test'
 			
-		junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
+		
 
 		
 		}
@@ -67,7 +67,7 @@ pipeline {
     					sh 'npm run coverage' 
 			}
 			
-			publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Coverage Report', reportTitles: '', useWrapperFileDirectly: true])	
+			
 		}
 			
 			
@@ -75,6 +75,14 @@ pipeline {
 	}	
 	    
 
+    }
+
+post {
+  always {
+     junit allowEmptyResults: true, stdioRetention: '', testResults: 'dependency-check-junit.xml'
+     junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
+    publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Coverage Report', reportTitles: '', useWrapperFileDirectly: true])
+ 	 }
     }
 }
 	
