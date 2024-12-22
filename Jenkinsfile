@@ -79,19 +79,17 @@ pipeline {
 
 		steps {
 
-			//withSonarQubeEnv('sonarqube-server'){	
+			withSonarQubeEnv('sonarqube-server'){	
 				sh '''
 				
    						 
 					$SONAR_SCANNER/bin/sonar-scanner \
   					-Dsonar.projectKey=SolarSystem-Project \
   					-Dsonar.sources=app.js \
-					-Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info  \
-					-Dsonar.host.url=http://54.166.222.72:9000 \
-  					-Dsonar.login=sqp_97f24bea85dda8f091d1fd97ee0d6e75bf0d8108
+					-Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
   					
 				'''
-
+				}
 			waitForQualityGate abortPipeline: true
 			//		}	
 
