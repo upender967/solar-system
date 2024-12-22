@@ -3,6 +3,8 @@ pipeline {
     tools {nodejs 'Nodejs-22.6.0'}
     environment {
   MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
+  MONGO_USERNAME=credentials('mongo-username')
+  MONGO_PASSWORD=credentials('mongo-pwd')
 	}
     stages {
         stage ('Install dependencies'){
@@ -48,9 +50,9 @@ pipeline {
 
 		steps {
 
-			withCredentials([usernamePassword(credentialsId: 'Mongo-creds', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+			
     			sh 'npm test'
-			}
+			
 		junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
 
 		
