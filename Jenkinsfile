@@ -78,14 +78,15 @@ pipeline {
 
 		steps {
 
-
-			withSonarQubeEnv(installationName: 'sonarqube-server') {
-    
-						sonar-scanner \
+			
+				sh '''
+				withSonarQubeEnv(installationName: 'sonarqube-server') {
+   						 
+					sonar-scanner \
   					-Dsonar.projectKey=SolarSystem-Project \
   					-Dsonar.sources=. \
   					
-
+				'''
 						}
 
 		}
