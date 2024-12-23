@@ -5,7 +5,7 @@ pipeline {
   MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
   MONGO_USERNAME=credentials('mongo-username')
   MONGO_PASSWORD=credentials('mongo-pwd')
-  SONAR_SCANNER=tool 'sonarqube-610';
+  SONAR_SCANNER=tool 'sonarqube-610'
 	}
     stages {
         stage ('Install dependencies'){
@@ -79,17 +79,18 @@ pipeline {
 
 		steps {
 
-			withSonarQubeEnv('sonarqube-server1'){	
+		//	withSonarQubeEnv('sonarqube-server1'){	
 				sh '''
 				
    						 
 					$SONAR_SCANNER/bin/sonar-scanner \
   					-Dsonar.projectKey=SolarSystem-Project \
   					-Dsonar.sources=app.js \
-					-Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
-  					
+					-Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
+					-Dsonar.host.url=http://18.207.194.62:9000 \
+  					-Dsonar.login=sqa_f02cc47f9c5e09cca370ca413a8eb81f62fb2069
 				'''
-				}
+		//		}
 		//	waitForQualityGate abortPipeline: true, credentialsId: 'Sonar-token' 
 			//		}	
 
