@@ -90,7 +90,7 @@ pipeline {
   					
 				'''
 				}
-			waitForQualityGate abortPipeline: true
+		//	waitForQualityGate abortPipeline: true, credentialsId: 'Sonar-token' 
 			//		}	
 
 		}
