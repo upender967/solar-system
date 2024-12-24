@@ -100,7 +100,7 @@ pipeline {
 
 	stage ('Build Docker image'){
 		steps {
-
+			sh 'printenv'
 			sh 'docker build -t majid359/solarsystem:$GIT_COMMIT .'
 		      }
 			
