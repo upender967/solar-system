@@ -104,6 +104,29 @@ pipeline {
 			sh 'docker build -t majid359/solarsystem:$GIT_COMMIT .'
 		      }
 			
+		}
+
+       stage ('Image scanning-Trivy') {
+		steps {
+
+			sh '''
+			trviy image majid359/solarsystem:$GIT_COMMIT /
+			--severity LOW,MEDIUM,HIGH /
+			--exit-code 0 /
+			--quit /
+			--format json -o trivy-image-non-critical-results.json
+
+			trviy image majid359/solarsystem:$GIT_COMMIT /
+                        --severity CRITICAL /
+                        --exit-code 1 /
+                        --quit /
+                        --format json -o trivy-image-cirtical-results.json
+ 			
+ 			'''
+
+		      }
+
+		
 		}    
 
     }
