@@ -101,7 +101,7 @@ pipeline {
 	stage ('Build Docker image'){
 		steps {
 
-			sh 'docker build -t majid359/solarsystem:$GIT_COMMIT .'
+			sh 'sudo docker build -t majid359/solarsystem:$GIT_COMMIT .'
 		      }
 			
 		}    
