@@ -131,16 +131,8 @@ pipeline {
 
 				sh '''
 
-			 	trivy report --input trivy-image-non-critical-results.json \
-			        --format template --template /usr/local/share/trivy/templates/html.tpl \
-    				--output trivy-image-non-critical-results.html
-
-
-				trivy report --input trivy-image-critical-results.json \
-    				--format template --template /usr/local/share/trivy/templates/html.tpl \
-    				--output trivy-image-critical-results.html
-
-				
+			 	trivy convert --format template --template "usr/local/share/trivy/templates/html.tpl" \
+				--output trivy-image-non-critical-results.html trivy-image-non-critical-results.json	
 
 				
 				   '''
