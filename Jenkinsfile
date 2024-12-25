@@ -110,13 +110,13 @@ pipeline {
 		steps {
 
 			sh '''
-			trviy image majid359/solarsystem:$GIT_COMMIT /
+			trivy image majid359/solarsystem:$GIT_COMMIT /
 			--severity LOW,MEDIUM,HIGH /
 			--exit-code 0 /
 			--quit /
 			--format json -o trivy-image-non-critical-results.json
 
-			trviy image majid359/solarsystem:$GIT_COMMIT /
+			trivy image majid359/solarsystem:$GIT_COMMIT /
                         --severity CRITICAL /
                         --exit-code 1 /
                         --quit /
@@ -125,6 +125,26 @@ pipeline {
  			'''
 
 		      }
+		post {
+
+			always {
+
+				sh '''
+
+				 trivy convert /
+				 --fromat template --template "@/usr/local/share/trivy/templates/html.tpl" /
+				 --output trivy-image-non-critical-results.html  trivy-image-non-critical-results.json
+
+				trivy covert /
+				--fromat template --template "@/usr/local/share/trivy/templates/html.tpl" /
+				--output trivy-image-critical-results.html  trivy-image-critical-results.json
+				
+
+				
+				   '''
+
+			       }
+		     }
 
 		
 		}    
@@ -136,6 +156,9 @@ post {
      junit allowEmptyResults: true, stdioRetention: '', testResults: 'dependency-check-junit.xml'
      junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
     publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Coverage Report', reportTitles: '', useWrapperFileDirectly: true])
+     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './', reportFiles: 'trivy-image-non-critical-results.html', reportName: 'Trviy-image-non-critical-vulnerabilities', reportTitles: '', useWrapperFileDirectly: true])
+     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './', reportFiles: 'trivy-image-critical-results.html', reportName: 'Trviy-image-critical-vulnerabilities', reportTitles: '', useWrapperFileDirectly: true])
+     
  	 }
     }
 }
