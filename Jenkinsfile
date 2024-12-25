@@ -110,16 +110,16 @@ pipeline {
 		steps {
 
 			sh '''
-			trivy image majid359/solarsystem:$GIT_COMMIT /
-			--severity LOW,MEDIUM,HIGH /
-			--exit-code 0 /
-			--quit /
+			trivy image majid359/solarsystem:$GIT_COMMIT \
+			--severity LOW,MEDIUM,HIGH \
+			--exit-code 0 \
+			--quit \
 			--format json -o trivy-image-non-critical-results.json
 
-			trivy image majid359/solarsystem:$GIT_COMMIT /
-                        --severity CRITICAL /
-                        --exit-code 1 /
-                        --quit /
+			trivy image majid359/solarsystem:$GIT_COMMIT \
+                        --severity CRITICAL \
+                        --exit-code 1 \
+                        --quit \
                         --format json -o trivy-image-cirtical-results.json
  			
  			'''
@@ -131,12 +131,12 @@ pipeline {
 
 				sh '''
 
-				 trivy convert /
-				 --fromat template --template "@/usr/local/share/trivy/templates/html.tpl" /
+			 	trivy convert \
+				 --fromat template --template "@/usr/local/share/trivy/templates/html.tpl" \
 				 --output trivy-image-non-critical-results.html  trivy-image-non-critical-results.json
 
-				trivy covert /
-				--fromat template --template "@/usr/local/share/trivy/templates/html.tpl" /
+				trivy covert \
+				--fromat template --template "@/usr/local/share/trivy/templates/html.tpl" \
 				--output trivy-image-critical-results.html  trivy-image-critical-results.json
 				
 
