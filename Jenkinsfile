@@ -137,7 +137,9 @@ pipeline {
 				trivy convert --format template --template "/usr/local/share/trivy/templates/html.tpl" \
 				--output trivy-image-critical-results.html trivy-image-critical-results.json	
 
-				
+				 trivy convert --format template --template "/usr/local/share/trivy/templates/junit.tpl" \
+                                --output trivy-image-non-critical-results.xml trivy-image-non-critical-results.json
+
 				   '''
 
 			       }
@@ -152,6 +154,7 @@ post {
   always {
      junit allowEmptyResults: true, stdioRetention: '', testResults: 'dependency-check-junit.xml'
      junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
+     junit allowEmptyResults: true, stdioRetention: '', testResults: 'trivy-critical-results.xml'
     publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Coverage Report', reportTitles: '', useWrapperFileDirectly: true])
      publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './', reportFiles: 'trivy-image-non-critical-results.html', reportName: 'Trviy-image-non-critical-vulnerabilities', reportTitles: '', useWrapperFileDirectly: true])
      publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './', reportFiles: 'trivy-image-critical-results.html', reportName: 'Trviy-image-critical-vulnerabilities', reportTitles: '', useWrapperFileDirectly: true])
