@@ -120,7 +120,7 @@ pipeline {
                         --severity CRITICAL \
                         --exit-code 1 \
                         --quiet \
-                        --format json -o trivy-image-cirtical-results.json
+                        --format json -o trivy-image-critical-results.json
  			
  			'''
 
