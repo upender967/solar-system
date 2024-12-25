@@ -113,13 +113,13 @@ pipeline {
 			trivy image majid359/solarsystem:$GIT_COMMIT \
 			--severity LOW,MEDIUM,HIGH \
 			--exit-code 0 \
-			--quit \
+			--quiet \
 			--format json -o trivy-image-non-critical-results.json
 
 			trivy image majid359/solarsystem:$GIT_COMMIT \
                         --severity CRITICAL \
                         --exit-code 1 \
-                        --quit \
+                        --quiet \
                         --format json -o trivy-image-cirtical-results.json
  			
  			'''
