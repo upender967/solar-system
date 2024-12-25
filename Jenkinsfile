@@ -146,7 +146,21 @@ pipeline {
 		     }
 
 		
-		}    
+		}
+
+
+	stage ('Push Docker image') {
+		steps {
+			withDockerRegistry(credentialsId: 'docker-cred2', url: "") {
+    
+				sh 'docker push majid359/solarsystem:$GIT_COMMIT'
+				
+				}
+
+
+	      }
+		
+	}    
 
     }
 
