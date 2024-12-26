@@ -160,7 +160,43 @@ pipeline {
 
 	      }
 		
-	}    
+	}
+
+	stage ('Deploy application in EC2){
+		steps {
+
+			script {
+
+				sshagent(['SSH-agent']) {
+   					sh '''
+					ssh -o StrictHostKeyChecking=no ubuntu@54.204.239.159 "
+					if sudo docker ps -a | grep -q "solar-system"; then
+					   sudo	docker stop "solar-system" && docker rm "solar-system"
+
+					fi
+
+					sudo docker run -name "solar-system" \
+					     -e MONGO_URI=$MONGO_URI \
+					     -e  MONGO_USERNAME= $MONGO_USERNAME \
+					     -e MONGO_PASSWORD= $MONGO_PASSWORD \
+					     -p 3000:3000 -d  majid359/solarsystem:$GIT_COMMIT
+					"
+				          '''
+					
+
+
+					}	
+
+
+				
+
+			       }
+
+	
+		      }
+
+
+		}    
 
     }
 
