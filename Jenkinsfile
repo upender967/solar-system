@@ -162,7 +162,7 @@ pipeline {
 		
 	}
 
-	stage ('Deploy application in EC2){
+	stage ('Deploy application in EC2'){
 		steps {
 
 			script {
