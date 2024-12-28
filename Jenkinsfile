@@ -237,14 +237,14 @@ pipeline {
 
 post {
   always {
-     script {
-         if (fileExsits('Kubernetes-Repo')){
+    // script {
+      //   if (fileExsits('Kubernetes-Repo')){
 
-			sh 'rm -rf Kubernetes-Repo'
-		}
+	//		sh 'rm -rf Kubernetes-Repo'
+	//	}
 
 
-	    }
+	  //  }
      junit allowEmptyResults: true, stdioRetention: '', testResults: 'dependency-check-junit.xml'
      junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
      junit allowEmptyResults: true, stdioRetention: '', testResults: 'trivy-critical-results.xml'
