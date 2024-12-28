@@ -163,6 +163,9 @@ pipeline {
 	}
 
 	stage ('Deploy application in EC2'){
+		when {
+			branch 'feature'
+		     }
 		steps {
 
 			script {
@@ -198,12 +201,50 @@ pipeline {
 		      }
 
 
+		}
+
+	stage ('Deploy to K8s'){
+
+		when {
+		    branch 'main'
+		    }
+		steps {
+
+     			sh 'git clone -b main https://github.com/Majid-Ali-Projects/Kubernetes-Repo.git'
+			dir ('kubernetes-Repo/manifest') {
+				sh '''
+					git checkout main
+					sed -i 's#majid359.*#majid359/solarsystem:$GIT_COMMIT#g'  deployement.yaml
+					git config --global user.email "Jenkins@dasher.com"
+
+					git add .
+					git commit 'Update Image $GIT_COMMIT'
+					git push origin main
+ 
+				'''
+				
+				}
+
+
+
+		      }
+
+
+
 		}    
 
     }
 
 post {
   always {
+     script {
+         if (fileExsits('Kubernetes-Repo')){
+
+			sh 'rm -rf Kubernetes-Repo'
+		}
+
+
+	    }
      junit allowEmptyResults: true, stdioRetention: '', testResults: 'dependency-check-junit.xml'
      junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
      junit allowEmptyResults: true, stdioRetention: '', testResults: 'trivy-critical-results.xml'
