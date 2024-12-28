@@ -211,7 +211,7 @@ pipeline {
 		    }
 		steps {
 				
-     			sh 'https://github.com/Majid-Ali-Projects/Kubernetes-Repo.git'
+     			sh 'git clone -b main https://github.com/Majid-Ali-Projects/Kubernetes-Repo.git'
 			dir ('Kubernetes-Repo/manifest') {
 				sh '''
 					git remote set-url origin https://$GITHUB_TOKEN@github.com/Majid-Ali-Projects/Kubernetes-Repo.git
