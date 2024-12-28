@@ -6,6 +6,7 @@ pipeline {
   MONGO_USERNAME=credentials('mongo-username')
   MONGO_PASSWORD=credentials('mongo-pwd')
   SONAR_SCANNER=tool 'sonarqube-610'
+  GITHUB_TOKEN=credentials('Git-hub-token')
 	}
     stages {
         stage ('Install dependencies'){
@@ -210,10 +211,10 @@ pipeline {
 		    }
 		steps {
 				
-     			sh 'git@github.com:Majid-Ali-Projects/Kubernetes-Repo.git'
+     			sh 'https://github.com/Majid-Ali-Projects/Kubernetes-Repo.git'
 			dir ('Kubernetes-Repo/manifest') {
 				sh '''
-					git remote set-url origin git@github.comi:Majid-Ali-Projects/Kubernetes-Repo.git
+					git remote set-url origin https://$GITHUB_TOKEN@github.com/Majid-Ali-Projects/Kubernetes-Repo.git
 					git remote -v
 					ls -l
 					sed -i 's#majid359.*#majid359/solarsystem:$GIT_COMMIT#g'  deployment.yaml
