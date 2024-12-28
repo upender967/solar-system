@@ -210,10 +210,10 @@ pipeline {
 		    }
 		steps {
 				
-     			sh 'git clone -b main https://github.com/Majid-Ali-Projects/Kubernetes-Repo.git'
+     			sh 'git@github.com:Majid-Ali-Projects/Kubernetes-Repo.git'
 			dir ('Kubernetes-Repo/manifest') {
 				sh '''
-					git remote set-url origin git@github.com:Majid-Ali-Projects/Kubernetes-Repo.git
+					git remote set-url origin git@github.comi:Majid-Ali-Projects/Kubernetes-Repo.git
 					git remote -v
 					ls -l
 					sed -i 's#majid359.*#majid359/solarsystem:$GIT_COMMIT#g'  deployment.yaml
