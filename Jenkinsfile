@@ -217,7 +217,7 @@ pipeline {
 					git remote set-url origin https://$GITHUB_TOKEN@github.com/Majid-Ali-Projects/Kubernetes-Repo.git
 					git remote -v
 					ls -l
-					sed -i 's#majid359.*#majid359/solarsystem:$GIT_COMMIT#g'  deployment.yaml
+					sed -i "s#majid359.*#majid359/solarsystem:$GIT_COMMIT#g"  deployment.yaml
 					git config --global user.email "Jenkins@dasher.com"
 
 					git add .
