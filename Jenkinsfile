@@ -174,7 +174,7 @@ pipeline {
 					sh 'ssh-add -l'
    					sh '''
 					
-					 ssh -o StrictHostKeyChecking=no   ubuntu@54.204.239.159 "
+					 ssh -o StrictHostKeyChecking=no   ubuntu@18.212.224.199 "
 					if sudo docker ps -a | grep -q "solar-system"; then
 					   sudo	docker stop "solar-system" && sudo docker rm "solar-system"
 
