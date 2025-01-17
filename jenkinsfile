@@ -8,7 +8,7 @@ agent any
 stage('Build') {
             steps {
                 
-                npm i
+                echo 'test message'
                 
             }
         }
