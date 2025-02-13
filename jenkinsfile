@@ -5,10 +5,10 @@ agent any
  stages{
 
 
-stage('Build') {
+stage('Installing dependencies') {
             steps {
                 
-                echo 'test message'
+                sh  'npm install --no-audit'
                 
             }
         }
