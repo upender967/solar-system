@@ -9,7 +9,7 @@ stage('Installing dependencies') {
             steps {
                 
                 // sh  'npm install --no-audit'
- sh 'echo scanning success'
+ sh 'echo scanning success after web hook addition'
                 
             }
         }
