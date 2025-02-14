@@ -16,6 +16,8 @@ stage('Installing dependencies') {
  
                 
             }
+
+            
         }
 
    stage('Dependency scanning') {
@@ -36,11 +38,13 @@ stage('Installing dependencies') {
 
 
 stage('Unit test') {
+
             steps {
 withCredentials([usernamePassword(credentialsId: 'mongodbcred', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
     sh  'npm test'
 }
 
+junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
 }
 
                  }
