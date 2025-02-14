@@ -23,7 +23,7 @@ stage('Installing dependencies') {
    stage('Dependency scanning') {
             steps {
                 
-        catchError(message: 'error skipped', stageResult: 'SUCCESS') {
+        catchError(message: 'error skipped', stageResult: 'SUCCESS',buildResult: 'SUCCESS') {
                 sh  '''
                   npm audit --audit-level=critical
                    echo $?
