@@ -18,6 +18,19 @@ stage('Installing dependencies') {
             }
         }
 
+stage('Dependency scanning') {
+            steps {
+                
+                sh  '''
+                  npm audit --audit-level=critical
+                   echo $?
+               '''
+ 
+                
+            }
+        }
+
+
 }
 
 
