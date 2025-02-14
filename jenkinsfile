@@ -49,6 +49,16 @@ junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xm
 
                  }
 
+stage('Build Image'){
+ steps{
+
+    sh 'docker build -t anandhabadmanaban/solar-system-nodejs:$GIT_COMMIT .'
+ }
+
+
+
+                 }
+
 
                       }
 
