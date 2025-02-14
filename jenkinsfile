@@ -1,6 +1,10 @@
 pipeline {
 
 agent any
+
+tools {
+nodejs 'Nodejs' 
+}
  
  stages{
 
@@ -8,8 +12,8 @@ agent any
 stage('Installing dependencies') {
             steps {
                 
-                // sh  'npm install --no-audit'
- sh 'echo scanning success after web hook addition'
+                sh  'npm install --no-audit'
+ 
                 
             }
         }
