@@ -2,16 +2,6 @@ pipeline {
 
 agent any
 
-''' This way cannot be good for credentials.  For other non sensitive data we can use this
-environment {
-  MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
-  MONGO_USERNAME = "superuser"
-  MONGO_PASSWORD = "SuperPassword"
-}
-
-FOR sentive data we need to use Bind credentials to variable step
-'''
-
 tools {
 nodejs 'Nodejs' 
 }
