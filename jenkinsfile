@@ -65,7 +65,7 @@ stage('Build Image'){
     trivy image anandhabadmanaban/solar-system-nodejs:$GIT_COMMIT \
     --severity CRITICAL \
     --exit-code \
-    --quiet
+    --quiet \
     --format json -o trivy-image-scan-report.json 
       '''
  }
