@@ -75,8 +75,8 @@ stage('Build Image'){
 always{
   sh '''
         trivy convert \
-        --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
-        --output trivy-image-scan-report.xml trivy-image-scan-report.json 
+        --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+        --output trivy-image-scan-report.html trivy-image-scan-report.json 
         '''
 }
  }
@@ -89,7 +89,7 @@ always{
 
                       post{
                         always{
-junit allowEmptyResults: true, stdioRetention: '', testResults: 'trivy-image-scan-report.xml'
+publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: false, reportDir: '', reportFiles: 'trivy-image-scan-report.html', reportName: 'Trivy scan result', reportTitles: 'Trivy title', useWrapperFileDirectly: true])
                         }
 
 
