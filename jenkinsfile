@@ -55,10 +55,40 @@ stage('Build Image'){
     sh 'docker build -t anandhabadmanaban/solar-system-nodejs:$GIT_COMMIT .'
  }
 
+               }
 
 
-                 }
+    stage('Trivy build scan'){
+ steps{
 
+    sh '''
+    trivy image anandhabadmanaban/solar-system-nodejs:$GIT_COMMIT \
+    --severity CRITICAL \
+    --exit-code \
+    --quiet
+    --format json -o trivy-image-scan-report.json 
+      '''
+ }
+
+ post{
+
+always{
+  sh '''
+        trivy convert \
+        --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
+        --output trivy-image-scan-report.xml trivy-image-scan-report.json 
+        '''
+}
+ }
+
+               }
+
+
+                      }
+
+
+                      post{
+junit allowEmptyResults: true, stdioRetention: '', testResults: 'trivy-image-scan-report.xml'
 
                       }
 
