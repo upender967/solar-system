@@ -84,6 +84,15 @@ always{
                }
 
 
+  stage('Build Image'){
+    steps{
+withDockerRegistry(credentialsId: 'Docker_cred') {
+    sh 'docker push  anandhabadmanaban/solar-system-nodejs:$GIT_COMMIT .'
+
+}
+ }
+
+
                       }
 
 
