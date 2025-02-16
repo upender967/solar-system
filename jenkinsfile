@@ -107,6 +107,8 @@ publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: false, re
 
 }
 
+}
+
 
 
 
