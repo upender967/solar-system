@@ -84,18 +84,28 @@ always{
                }
 
 
-  
+stage('Docker push'){
+    steps{
+withDockerRegistry(credentialsId: 'Docker_cred', url:"") {
+    sh 'docker push  anandhabadmanaban/solar-system-nodejs:$GIT_COMMIT'
 
-
-                      post{
-                        always{
-publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: false, reportDir: '', reportFiles: 'trivy-image-scan-report.html', reportName: 'Trivy scan result', reportTitles: 'Trivy title', useWrapperFileDirectly: true])
-                        }
+}
+ }
 
 
                       }
 
 
+                     
+
+
 }
+ post{
+                        always {
+publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: false, reportDir: '', reportFiles: 'trivy-image-scan-report.html', reportName: 'Trivy scan result', reportTitles: 'Trivy title', useWrapperFileDirectly: true])
+                        }
+
+
+                      }
 
 }
