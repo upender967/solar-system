@@ -27,10 +27,11 @@ pipeline {
             parallel {
                 stage('Dependency Check (OWASP 10)') {
                     steps {
-                        dependencyCheck additionalArguments: '''--scan \'./\' \\
-                        --out \'./\' \\
-                        --format \'ALL\' \\
-                        --prettyPrint''', odcInstallation: 'OWASP-Dependency-Check-10'
+                        dependencyCheck additionalArguments: '''
+                                            --scan './' \\
+                                            --out './' \\
+                                            --format 'ALL' \\
+                                            --prettyPrint''', odcInstallation: 'OWASP-Dependency-Check'
                     }
                 }
 
