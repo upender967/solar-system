@@ -32,6 +32,7 @@ pipeline {
                                             --out './' \\
                                             --format 'ALL' \\
                                             --prettyPrint''', odcInstallation: 'OWASP-Dependency-Check'
+                        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: '$WORKSPACE/reports/html', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
                         publishGiteaAssets assets: '$WORKSPACE/**/TEST-*.xml', followSymlinks: false
                         dependencyCheckPublisher failedTotalCritical: 1, pattern: '$WORKSPACE/**/TEST-*.xml', stopBuild: true 
                     }
