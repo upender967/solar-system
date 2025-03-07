@@ -38,8 +38,7 @@ pipeline {
                                 --scan ./ 
                                 --out ./${REPORT_DIR} 
                                 --format ALL 
-                                --prettyPrint 
-                                --disableDatabase 
+                                --prettyPrint
                             ''', odcInstallation: 'OWASP-Dependency-Check'
                             
                             // Ensure the report directory is created if not already present
