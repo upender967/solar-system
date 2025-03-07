@@ -27,9 +27,10 @@ pipeline {
             parallel {
                 stage('Dependency Check (OWASP 10)') {
                     steps {
-                        script {
-                            sh 'npx retire --path . --outputformat json'
-                        }
+                        dependencyCheck additionalArguments: '''--scan \'./\' \\
+                        --out \'./\' \\
+                        --format \'ALL\' \\
+                        --prettyPrint''', odcInstallation: 'OWASP-Dependency-Check-10'
                     }
                 }
 
@@ -44,5 +45,3 @@ pipeline {
         }
     }
 }
-
-
