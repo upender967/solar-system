@@ -32,6 +32,7 @@ pipeline {
                                             --out './' \\
                                             --format 'ALL' \\
                                             --prettyPrint''', odcInstallation: 'OWASP-Dependency-Check'
+                        publishGiteaAssets assets: '$WORKSPACE/**/TEST-*.xml', followSymlinks: false
                         dependencyCheckPublisher failedTotalCritical: 1, pattern: '$WORKSPACE/**/TEST-*.xml', stopBuild: true 
                     }
                 }
