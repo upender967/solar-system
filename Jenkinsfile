@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS 23.9.0'  // The name configured in Global Tool Configuration 
+        nodejs 'NodeJS 23.9.0'  // The name configured in Global Tool Configuration
     }
 
     stages {
@@ -22,8 +22,27 @@ pipeline {
                 }
             }
         }
+
+        stage('Security Checks') {
+            parallel {
+                stage('Dependency Check (OWASP 10)') {
+                    steps {
+                        script {
+                            sh 'npx retire --path . --outputformat json'
+                        }
+                    }
+                }
+
+                stage('NPM Audit (Critical)') {
+                    steps {
+                        script {
+                            sh 'npm audit --audit-level=critical'
+                        }
+                    }
+                }
+            }
+        }
     }
 }
-
 
 
