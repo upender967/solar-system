@@ -47,4 +47,21 @@ pipeline {
             }
         }
     }
+
+    post {
+        always {
+            // Archive Dependency-Check report
+            archiveArtifacts 'dependency-check-report/*.html'
+            
+            // Publish HTML report for Dependency-Check
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'dependency-check-report',
+                reportFiles: 'dependency-check-report.html',
+                reportName: 'Dependency-Check Report'
+            ])
+        }
+    }
 }
