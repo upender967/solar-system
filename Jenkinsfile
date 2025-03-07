@@ -32,6 +32,7 @@ pipeline {
                                             --out './' \\
                                             --format 'ALL' \\
                                             --prettyPrint''', odcInstallation: 'OWASP-Dependency-Check'
+                        dependencyCheckPublisher failedTotalCritical: 1, pattern: '$WORKSPACE/**/TEST-*.xml', stopBuild: true 
                     }
                 }
 
