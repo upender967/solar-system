@@ -5,6 +5,11 @@ pipeline {
         nodejs 'NodeJS 23.9.0'  // The name configured in Global Tool Configuration
     }
 
+    environment {
+        // Define the directory for the dependency-check report
+        REPORT_DIR = 'dependency-check-report'
+    }
+
     stages {
         stage('Verify Node.js and NPM') {
             steps {
@@ -30,31 +35,30 @@ pipeline {
                         script {
                             // Run OWASP Dependency Check
                             dependencyCheck additionalArguments: '''
-                                --scan './' \\
-                                --out './dependency-check-report' \\
-                                --format 'ALL' \\
-                                --prettyPrint
+                                --scan ./ 
+                                --out ./${REPORT_DIR} 
+                                --format ALL 
+                                --prettyPrint 
+                                --disableDatabase 
                             ''', odcInstallation: 'OWASP-Dependency-Check'
                             
-                            // Ensure report is generated before publishing
-                            sh 'ls -R dependency-check-report'  // List files to verify report existence
+                            // Ensure the report directory is created if not already present
+                            sh 'mkdir -p $REPORT_DIR'
+                            
+                            // Publish the HTML report
+                            publishHTML([ 
+                                allowMissing: false, 
+                                alwaysLinkToLastBuild: true, 
+                                keepAll: true, 
+                                reportDir: "$WORKSPACE/$REPORT_DIR", 
+                                reportFiles: 'index.html', 
+                                reportName: 'HTML Report' 
+                            ])
+                            
+                            // Optional: Publish Dependency Check results (XML format)
+                            publishGiteaAssets assets: '$WORKSPACE/**/TEST-*.xml', followSymlinks: false
+                            dependencyCheckPublisher failedTotalCritical: 1, pattern: '$WORKSPACE/**/TEST-*.xml', stopBuild: true 
                         }
-
-                        // Publish HTML report for Dependency-Check (adjusting path)
-                        publishHTML([
-                            allowMissing: true,
-                            alwaysLinkToLastBuild: true,
-                            keepAll: true,
-                            reportDir: 'dependency-check-report', // Ensure this matches the correct path
-                            reportFiles: 'dependency-check-report.html', // Ensure this file exists
-                            reportName: 'Dependency-Check Report'
-                        ])
-
-                        // Publish assets (if any) from tests or other reports
-                        publishGiteaAssets assets: '$WORKSPACE/**/TEST-*.xml', followSymlinks: false
-                        
-                        // Publish Dependency Check Publisher report
-                        dependencyCheckPublisher failedTotalCritical: 1, pattern: '$WORKSPACE/**/TEST-*.xml', stopBuild: true
                     }
                 }
 
@@ -67,39 +71,21 @@ pipeline {
                 }
             }
         }
-
-        stage('Generate OWASP Dependency Check Report') {
-            steps {
-                script {
-                    // Ensure that if OWASP Dependency Check didn't generate reports earlier,
-                    // we force it to run here (just in case).
-                    dependencyCheck additionalArguments: '''
-                        --scan './' \\
-                        --out './dependency-check-report' \\
-                        --format 'ALL' \\
-                        --prettyPrint
-                    ''', odcInstallation: 'OWASP-Dependency-Check'
-
-                    // Print the directory content for debugging
-                    sh 'ls -R dependency-check-report'
-                }
-            }
-        }
     }
 
     post {
         always {
-            // Archive Dependency-Check report (adjust path if needed)
-            archiveArtifacts 'dependency-check-report/*.html'
-
-            // Publish the Dependency-Check report as HTML
-            publishHTML([
-                allowMissing: false,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'dependency-check-report', // Path where report is saved
-                reportFiles: 'dependency-check-report.html', // Ensure this is the correct file
-                reportName: 'Dependency-Check Report'
+            // Archive Dependency-Check report
+            archiveArtifacts '**/dependency-check-report/*.html'
+            
+            // Publish HTML report for Dependency-Check
+            publishHTML([ 
+                allowMissing: false, 
+                alwaysLinkToLastBuild: true, 
+                keepAll: true, 
+                reportDir: "$WORKSPACE/$REPORT_DIR", 
+                reportFiles: 'dependency-check-report.html', 
+                reportName: 'Dependency-Check Report' 
             ])
         }
     }
