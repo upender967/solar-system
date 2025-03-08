@@ -2,10 +2,8 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS 23.9.0'  // The name configured in Global Tool Configuration
+        nodejs 'NodeJS 23.9.0'
     }
-
-   
 
     stages {
         stage('Verify Node.js and NPM') {
@@ -21,6 +19,7 @@ pipeline {
             steps {
                 script {
                     sh 'npm install --no-audit'
+                    sh 'mkdir -p dependency-check-data'  // Ensure the directory exists
                 }
             }
         }
@@ -30,18 +29,20 @@ pipeline {
                 stage('Dependency Check (OWASP 10)') {
                     steps {
                         script {
-                            // Run OWASP Dependency Check
-                            dependencyCheck additionalArguments: '''
-                                --scan ./ 
-                                --out ./${REPORT_DIR} 
+                            dependencyCheck additionalArguments: """
+                                --scan ./node_modules 
+                                --out ./dependency-check-report 
                                 --format ALL 
                                 --prettyPrint
-                            ''', odcInstallation: 'OWASP-Dependency-Check'
-                            
-                            
-            
+                                --data ./dependency-check-data  // Cache database
+                                --disableAssembly  
+                                --disableJar  
+                                --log-level WARN
+                            """, odcInstallation: 'OWASP-Dependency-Check'
                         }
                     }
+                }
+                
                 stage('NPM Audit (Critical)') {
                     steps {
                         script {
@@ -52,6 +53,5 @@ pipeline {
             }
         }
     }
-
-    
 }
+
