@@ -5,10 +5,7 @@ pipeline {
         nodejs 'NodeJS 23.9.0'  // The name configured in Global Tool Configuration
     }
 
-    environment {
-        // Define the directory for the dependency-check report
-        REPORT_DIR = 'dependency-check-report'
-    }
+   
 
     stages {
         stage('Verify Node.js and NPM') {
