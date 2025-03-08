@@ -37,7 +37,7 @@ pipeline {
                                 --data ./dependency-check-data  // Cache database
                                 --disableAssembly  
                                 --disableJar  
-                                --log-level WARN
+                                
                             """, odcInstallation: 'OWASP-Dependency-Check'
                         }
                     }
