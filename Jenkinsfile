@@ -41,26 +41,10 @@ pipeline {
                                 --prettyPrint
                             ''', odcInstallation: 'OWASP-Dependency-Check'
                             
-                            // Ensure the report directory is created if not already present
-                            sh 'mkdir -p $REPORT_DIR'
                             
-                            // Publish the HTML report
-                            publishHTML([ 
-                                allowMissing: false, 
-                                alwaysLinkToLastBuild: true, 
-                                keepAll: true, 
-                                reportDir: "$WORKSPACE/$REPORT_DIR", 
-                                reportFiles: 'index.html', 
-                                reportName: 'HTML Report' 
-                            ])
-                            
-                            // Optional: Publish Dependency Check results (XML format)
-                            publishGiteaAssets assets: '$WORKSPACE/**/TEST-*.xml', followSymlinks: false
-                            dependencyCheckPublisher failedTotalCritical: 1, pattern: '$WORKSPACE/**/TEST-*.xml', stopBuild: true 
+            
                         }
                     }
-                }
-
                 stage('NPM Audit (Critical)') {
                     steps {
                         script {
@@ -72,20 +56,5 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            // Archive Dependency-Check report
-            archiveArtifacts '**/dependency-check-report/*.html'
-            
-            // Publish HTML report for Dependency-Check
-            publishHTML([ 
-                allowMissing: false, 
-                alwaysLinkToLastBuild: true, 
-                keepAll: true, 
-                reportDir: "$WORKSPACE/$REPORT_DIR", 
-                reportFiles: 'dependency-check-report.html', 
-                reportName: 'Dependency-Check Report' 
-            ])
-        }
-    }
+    
 }
