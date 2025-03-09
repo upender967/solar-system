@@ -29,19 +29,19 @@ pipeline {
                     steps {
                         script {
                             dependencyCheck additionalArguments: """
-                                --scan ./node_modules 
+                                --scan ./src  
                                 --out ./dependency-check-report 
                                 --format ALL 
                                 --prettyPrint
-                                --data ./dependency-check-data  // Cache database
+                                --data ./dependency-check-data  
                                 --disableAssembly  
                                 --disableJar  
                             """, odcInstallation: 'OWASP-Dependency-Check'
-                            dependencyCheckPublisher failedTotalCritical: 1, pattern: '$WORKSPACE/**/TEST-*.xml', stopBuild: true 
+                            dependencyCheckPublisher failedTotalCritical: 1, stopBuild: true
                         }
                     }
                 }
-                
+
                 stage('NPM Audit (Critical)') {
                     steps {
                         script {
@@ -58,13 +58,12 @@ pipeline {
                     sh 'npm test -- --reporter=junit --reporter-options output=reports/junit-report.xml'
                 }
             }
-         stage('publish JUnit Tests reports') {
+        }
+
+        stage('Publish JUnit Reports') {
             steps {
-                script {
-                    sh 'junit allowEmptyResults: true, testResults: 'reports/junit-report.xml''
-                }
+                junit allowEmptyResults: true, testResults: 'reports/junit-report.xml'
             }
-            
         }
     }
 }
