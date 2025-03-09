@@ -6,8 +6,9 @@ pipeline {
     }
 
     environment {
-        MONGO_URI = 'mongodb://localhost:27017/myDatabase'
-        MONGO_USERNAME = 'admin'
+        // Referencing credentials from Jenkins
+        MONGO_URI = credentials('mongo-uri')  // MONGO_URI will be pulled from the 'mongo-uri' secret text credential
+        MONGO_USERNAME = credentials('mongo-username')  // MONGO_USERNAME will be pulled from the 'mongo-username' credential
     }
 
     stages {
@@ -59,7 +60,9 @@ pipeline {
 
         stage('JUnit Tests') {
             steps {
-                withCredentials([string(credentialsId: 'mongo-password', variable: 'MONGO_PASSWORD')]) {
+                withCredentials([
+                    string(credentialsId: 'mongo-password', variable: 'MONGO_PASSWORD')  // Using mongo-password
+                ]) {
                     script {
                         // Running tests with MongoDB credentials
                         echo "Running tests with MongoDB credentials..."
@@ -88,3 +91,4 @@ pipeline {
         }
     }
 }
+
