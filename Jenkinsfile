@@ -58,11 +58,13 @@ pipeline {
                     sh 'npm test -- --reporter=junit --reporter-options output=reports/junit-report.xml'
                 }
             }
-            post {
-                always {
-                    junit 'reports/junit-report.xml'
+         stage('publish JUnit Tests reports') {
+            steps {
+                script {
+                    sh 'junit allowEmptyResults: true, testResults: 'reports/junit-report.xml''
                 }
             }
+            
         }
     }
 }
