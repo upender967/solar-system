@@ -55,14 +55,22 @@ pipeline {
         stage('JUnit Tests') {
             steps {
                 script {
-                    sh 'npm test -- --reporter=junit --reporter-options output=reports/junit-report.xml'
+                    // Running tests without generating JUnit reports
+                    sh 'npm test'
                 }
             }
         }
 
         stage('Publish JUnit Reports') {
             steps {
-                junit allowEmptyResults: true, testResults: 'reports/junit-report.xml'
+                script {
+                    // Check if the reports directory exists, otherwise skip the publishing
+                    if (fileExists('reports/junit-report.xml')) {
+                        junit allowEmptyResults: true, testResults: 'reports/junit-report.xml'
+                    } else {
+                        echo 'No JUnit report generated. Skipping publishing.'
+                    }
+                }
             }
         }
     }
