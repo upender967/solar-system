@@ -5,6 +5,11 @@ pipeline {
         nodejs 'NodeJS 23.9.0'
     }
 
+    environment {
+        MONGO_URI = 'mongodb://localhost:27017/myDatabase'
+        MONGO_USERNAME = 'admin'
+    }
+
     stages {
         stage('Verify Node.js and NPM') {
             steps {
@@ -54,9 +59,17 @@ pipeline {
 
         stage('JUnit Tests') {
             steps {
-                script {
-                    // Running tests without generating JUnit reports
-                    sh 'npm test'
+                withCredentials([string(credentialsId: 'mongo-password', variable: 'MONGO_PASSWORD')]) {
+                    script {
+                        // Running tests with MongoDB credentials
+                        echo "Running tests with MongoDB credentials..."
+
+                        // Running npm tests
+                        sh '''#!/bin/bash
+                        echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
+                        npm test  # This will run your test script defined in package.json
+                        '''
+                    }
                 }
             }
         }
