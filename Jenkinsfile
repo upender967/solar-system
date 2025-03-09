@@ -7,8 +7,7 @@ pipeline {
 
     environment {
         // Referencing credentials from Jenkins
-        MONGO_URI = credentials('mongo-uri')  // MONGO_URI will be pulled from the 'mongo-uri' secret text credential
-        MONGO_USERNAME = credentials('mongo-username')  // MONGO_USERNAME will be pulled from the 'mongo-username' credential
+          MONGO_URI = "mongodb://localhost:27017/myDatabase"
     }
 
     stages {
@@ -60,35 +59,18 @@ pipeline {
 
         stage('JUnit Tests') {
             steps {
-                withCredentials([
-                    string(credentialsId: 'mongo-password', variable: 'MONGO_PASSWORD')  // Using mongo-password
-                ]) {
+                withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')])  {
                     script {
-                        // Running tests with MongoDB credentials
-                        echo "Running tests with MongoDB credentials..."
-
-                        // Running npm tests
                         sh '''#!/bin/bash
                         echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
                         npm test  # This will run your test script defined in package.json
                         '''
                     }
+                    junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: 'test-result.xml'  
                 }
             }
         }
 
-        stage('Publish JUnit Reports') {
-            steps {
-                script {
-                    // Check if the reports directory exists, otherwise skip the publishing
-                    if (fileExists('reports/junit-report.xml')) {
-                        junit allowEmptyResults: true, testResults: 'reports/junit-report.xml'
-                    } else {
-                        echo 'No JUnit report generated. Skipping publishing.'
-                    }
-                }
-            }
-        }
     }
 }
 
