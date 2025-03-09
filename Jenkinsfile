@@ -19,7 +19,6 @@ pipeline {
             steps {
                 script {
                     sh 'npm install --no-audit'
-                    sh 'mkdir -p dependency-check-data'  // Ensure the directory exists
                 }
             }
         }
@@ -37,7 +36,6 @@ pipeline {
                                 --data ./dependency-check-data  // Cache database
                                 --disableAssembly  
                                 --disableJar  
-                                
                             """, odcInstallation: 'OWASP-Dependency-Check'
                             dependencyCheckPublisher failedTotalCritical: 1, pattern: '$WORKSPACE/**/TEST-*.xml', stopBuild: true 
                         }
@@ -53,6 +51,18 @@ pipeline {
                 }
             }
         }
+
+        stage('JUnit Tests') {
+            steps {
+                script {
+                    sh 'npm test -- --reporter=junit --reporter-options output=reports/junit-report.xml'
+                }
+            }
+            post {
+                always {
+                    junit 'reports/junit-report.xml'
+                }
+            }
+        }
     }
 }
-
