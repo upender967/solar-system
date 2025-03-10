@@ -61,7 +61,8 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')])  {
                     script {
-                        echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
+                        echo "Connecting to MongoDB with user: ${MONGO_USERNAME} and password ${MONGO_PASSWORD}"
+
                         sh 'npm test'  // This will run your test script defined in package.json
                     }
                     junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: 'test-result.xml'  
