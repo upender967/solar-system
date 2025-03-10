@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node app.js",
-    "test": "mocha --reporter mocha-junit-reporter --reporter-options mochaFile=test-result.xml",
+    "test":  "mocha app-test.js --reporter mocha-junit-reporter --reporter-options mochaFile=test-result.xml",
     "coverage": "nyc --reporter cobertura --reporter lcov --reporter text --reporter json-summary  mocha app-test.js --timeout 10000  --exit"
   },
   "nyc": {
