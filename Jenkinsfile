@@ -36,8 +36,7 @@ pipeline {
                             dependencyCheck additionalArguments: """
                                 --scan \'./\'
                                 --out  \'./\'
-                                --format \'ALL\' 
-                                --prettyPrint 
+                                --format 'HTML'
                                 --disableAssembly  
                                 --disableJar  
                             """, odcInstallation: 'OWASP-Dependency-Check'
