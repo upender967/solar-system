@@ -34,11 +34,10 @@ pipeline {
                     steps {
                         script {
                             dependencyCheck additionalArguments: """
-                                --scan /'./\'
-                                --out ./dependency-check-report 
-                                --format ALL 
-                                --prettyPrint
-                                --data ./dependency-check-data  
+                                --scan \'./\'
+                                --out  \'./\'
+                                --format \'ALL\' 
+                                --prettyPrint 
                                 --disableAssembly  
                                 --disableJar  
                             """, odcInstallation: 'OWASP-Dependency-Check'
