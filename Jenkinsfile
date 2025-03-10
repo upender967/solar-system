@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         // Referencing credentials from Jenkins
-        MONGO_URI = "mongodb://10.0.2.15:27017"
+        MONGO_URI = "mongodb://localhost:27017"
     }
 
     stages {
@@ -53,23 +53,6 @@ pipeline {
                             sh 'npm audit --audit-level=critical'
                         }
                     }
-                }
-            }
-        }
-
-        stage('Verify MongoDB Connectivity') {
-            steps {
-                script {
-                    echo "Testing MongoDB connection at ${MONGO_URI}..."
-                    // Test if MongoDB is reachable (replace with actual MongoDB URI and credentials if necessary)
-                    sh '''
-                        if nc -zv 10.0.2.15 27017; then
-                            echo "MongoDB is reachable"
-                        else
-                            echo "MongoDB is not reachable"
-                            exit 1
-                        fi
-                    '''
                 }
             }
         }
