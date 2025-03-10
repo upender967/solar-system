@@ -34,7 +34,7 @@ pipeline {
                     steps {
                         script {
                             dependencyCheck additionalArguments: """
-                                --scan  './'
+                                --scan  './src'
                                 --out  \'./\'
                                 --format 'HTML'
                                 --disableAssembly  
