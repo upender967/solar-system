@@ -65,7 +65,7 @@ pipeline {
 
                         sh 'npm test'  // This will run your test script defined in package.json
                     }
-                    junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-result.xml'  
+                    junit allowEmptyResults: false, stdioRetention: '', testResults: 'test-result.xml'  
                 }
             }
         }
