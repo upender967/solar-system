@@ -34,7 +34,7 @@ pipeline {
                     steps {
                         script {
                             dependencyCheck additionalArguments: """
-                                --scan \'./\'
+                                --scan  '/var/jenkins_home/workspace/peline-nodejs-app_feature-branch@2'
                                 --out  \'./\'
                                 --format 'HTML'
                                 --disableAssembly  
