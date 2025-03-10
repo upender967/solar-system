@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         // Referencing credentials from Jenkins
-        MONGO_URI = "mongodb://localhost:27017"
+        MONGO_URI = "mongodb://10.0.2.15:27017"
     }
 
     stages {
