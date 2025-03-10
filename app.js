@@ -13,6 +13,9 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
 app.use(cors())
 
+// Set the strictQuery option to false (or true based on your preference)
+mongoose.set('strictQuery', false);  
+
 mongoose.connect(process.env.MONGO_URI, {
     user: process.env.MONGO_USERNAME,
     pass: process.env.MONGO_PASSWORD,
