@@ -34,12 +34,12 @@ pipeline {
                     steps {
                         script {
                             dependencyCheck additionalArguments: """
-                                --scan  '/var/jenkins_home/workspace/peline-nodejs-app_feature-branch@2'
+                                --scan  './'
                                 --out  \'./\'
                                 --format 'HTML'
                                 --disableAssembly  
                                 --disableJar  
-                            """, odcInstallation: 'OWASP-Dependency-Check'
+                              """, odcInstallation: 'OWASP-Dependency-Check'
                             dependencyCheckPublisher failedTotalCritical: 1, stopBuild: true
                         }
                     }
