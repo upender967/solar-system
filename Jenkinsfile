@@ -9,7 +9,10 @@ pipeline {
         // Referencing credentials from Jenkins
         MONGO_URI = "mongodb://10.0.2.15:27017"
     }
-
+    options {
+     disableConcurrentBuilds abortPrevious: true
+     disableResume()
+    }
     stages {
         stage('Verify Node.js and NPM') {
             steps {
@@ -47,7 +50,12 @@ pipeline {
 
                 stage('NPM Audit (Critical)') {
                     steps {
+                        options {
+                            timestamps
+                            }
+
                         script {
+
                             sh 'npm audit --audit-level=critical'
                         }
                     }
