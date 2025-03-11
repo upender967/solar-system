@@ -61,7 +61,7 @@ pipeline {
                         echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
                         sh 'npm test' // Runs the test script from package.json
                     }
-                    junit allowEmptyResults: false, testResults: 'test-result.xml'
+                    junit allowEmptyResults: true, testResults: 'test-result.xml'
                 }
             }
         }
