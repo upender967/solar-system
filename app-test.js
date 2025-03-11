@@ -13,11 +13,23 @@ describe('Planets API Suite', () => {
     beforeEach(async () => {
         // Clear the database or relevant collections
         await mongoose.connection.db.collection('planets').deleteMany({});
+        
+        // Insert planet data
+        await mongoose.connection.db.collection('planets').insertMany([
+            { id: 1, name: 'Mercury' },
+            { id: 2, name: 'Venus' },
+            { id: 3, name: 'Earth' },
+            { id: 4, name: 'Mars' },
+            { id: 5, name: 'Jupiter' },
+            { id: 6, name: 'Saturn' },
+            { id: 7, name: 'Uranus' },
+            { id: 8, name: 'Neptune' }
+        ]);
     });
 
     describe('Fetching Planet Details', () => {
         it('it should fetch a planet named Mercury', (done) => {
-            let payload = { id: 0 };
+            let payload = { id: 1 };
             chai.request(server)
                 .post('/planet')
                 .send(payload)
@@ -31,7 +43,7 @@ describe('Planets API Suite', () => {
         });
 
         it('it should fetch a planet named Venus', (done) => {
-            let payload = { id: 1 };
+            let payload = { id: 2 };
             chai.request(server)
                 .post('/planet')
                 .send(payload)
@@ -45,7 +57,7 @@ describe('Planets API Suite', () => {
         });
 
         it('it should fetch a planet named Earth', (done) => {
-            let payload = { id: 2 };
+            let payload = { id: 3 };
             chai.request(server)
                 .post('/planet')
                 .send(payload)
@@ -59,7 +71,7 @@ describe('Planets API Suite', () => {
         });
 
         it('it should fetch a planet named Mars', (done) => {
-            let payload = { id: 3 };
+            let payload = { id: 4 };
             chai.request(server)
                 .post('/planet')
                 .send(payload)
@@ -73,7 +85,7 @@ describe('Planets API Suite', () => {
         });
 
         it('it should fetch a planet named Jupiter', (done) => {
-            let payload = { id: 4 };
+            let payload = { id: 5 };
             chai.request(server)
                 .post('/planet')
                 .send(payload)
@@ -87,7 +99,7 @@ describe('Planets API Suite', () => {
         });
 
         it('it should fetch a planet named Saturn', (done) => {
-            let payload = { id: 5 };
+            let payload = { id: 6 };
             chai.request(server)
                 .post('/planet')
                 .send(payload)
@@ -101,7 +113,7 @@ describe('Planets API Suite', () => {
         });
 
         it('it should fetch a planet named Uranus', (done) => {
-            let payload = { id: 6 };
+            let payload = { id: 7 };
             chai.request(server)
                 .post('/planet')
                 .send(payload)
@@ -115,7 +127,7 @@ describe('Planets API Suite', () => {
         });
 
         it('it should fetch a planet named Neptune', (done) => {
-            let payload = { id: 7 };
+            let payload = { id: 8 };
             chai.request(server)
                 .post('/planet')
                 .send(payload)
