@@ -6,13 +6,15 @@ pipeline {
     }
 
     environment {
-        // Referencing credentials from Jenkins
+        /* Referencing credentials from Jenkins */
         MONGO_URI = "mongodb://10.0.2.15:27017"
     }
+
     options {
-     disableConcurrentBuilds abortPrevious: true
-     disableResume()
+        disableConcurrentBuilds abortPrevious: true
+        disableResume()
     }
+
     stages {
         stage('Verify Node.js and NPM') {
             steps {
@@ -36,26 +38,19 @@ pipeline {
                 stage('Dependency Check (OWASP 10)') {
                     steps {
                         script {
-                            dependencyCheck additionalArguments: """
-                                --scan  './src'
-                                --out  \'./\'
-                                --format 'HTML'
-                                --disableAssembly  
-                                --disableJar  
-                              """, odcInstallation: 'OWASP-Dependency-Check'
+                            dependencyCheck additionalArguments: "--scan ./src --out ./ --format HTML --disableAssembly --disableJar", 
+                                odcInstallation: 'OWASP-Dependency-Check'
                             dependencyCheckPublisher failedTotalCritical: 1, stopBuild: true
                         }
                     }
                 }
 
                 stage('NPM Audit (Critical)') {
+                    options {
+                        timestamps()
+                    }
                     steps {
-                        options {
-                            timestamps
-                            }
-
                         script {
-
                             sh 'npm audit --audit-level=critical'
                         }
                     }
@@ -65,16 +60,14 @@ pipeline {
 
         stage('JUnit Tests') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')])  {
+                withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                     script {
                         echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
-
-                        sh 'npm test'  // This will run your test script defined in package.json
+                        sh 'npm test' // Runs the test script from package.json
                     }
-                    junit allowEmptyResults: false, stdioRetention: '', testResults: 'test-result.xml'  
+                    junit allowEmptyResults: false, testResults: 'test-result.xml'
                 }
             }
         }
-
     }
 }
