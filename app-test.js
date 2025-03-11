@@ -9,6 +9,12 @@ chai.use(chaiHttp);
 
 describe('Planets API Suite', () => {
 
+    // Cleanup database before each test case
+    beforeEach(async () => {
+        // Clear the database or relevant collections
+        await mongoose.connection.db.collection('planets').deleteMany({});
+    });
+
     describe('Fetching Planet Details', () => {
         it('it should fetch a planet named Mercury', (done) => {
             let payload = { id: 0 };
@@ -80,7 +86,7 @@ describe('Planets API Suite', () => {
                 });
         });
 
-        it('it should fetch a planet named Saturn', (done) => {  // Fixed spelling of "Saturn"
+        it('it should fetch a planet named Saturn', (done) => {
             let payload = { id: 5 };
             chai.request(server)
                 .post('/planet')
