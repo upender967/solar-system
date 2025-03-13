@@ -16,6 +16,7 @@ pipeline{
               stage('audit fix'){
                steps{
                   sh 'npm audit --audit-level=critical'
+                  sh 'echo hiiii'
                }
               }
              stage('owasp' ){
