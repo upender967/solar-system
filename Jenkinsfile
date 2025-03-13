@@ -11,21 +11,24 @@ pipeline{
         
       }
     }
-    stage('audit fix'){
-       steps{
-          sh 'npm audit --audit-level=critical'
-       }
+    stage('parellel'){
+      parallel{
+              stage('audit fix'){
+               steps{
+                  sh 'npm audit --audit-level=critical'
+               }
+              }
+             stage('owasp' ){
+               steps{
+                 dependencyCheck additionalArguments: '''
+                      --scan  \\\'./\\\'
+                      --out  \\\'./\\\'
+                      --format \\\'./\\\'
+                      --prettyPrint\'\'\'''', odcInstallation: 'owasp'
+               }
+             }
       }
-     stage('owasp' ){
-       steps{
-         dependencyCheck additionalArguments: '''
-              --scan  \\\'./\\\'
-              --out  \\\'./\\\'
-              --format \\\'./\\\'
-              --prettyPrint\'\'\'''', odcInstallation: 'owasp'
-       }
-     }
-    
+    }
     
   }
 }
