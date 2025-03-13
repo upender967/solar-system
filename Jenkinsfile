@@ -20,11 +20,11 @@ pipeline{
               }
              stage('owasp' ){
                steps{
-                 dependencyCheck additionalArguments: '''
-                      --scan  \\\'./\\\'
-                      --out  \\\'./\\\'
-                      --format \\\'./\\\'
-                      --prettyPrint\'\'\'''', odcInstallation: 'owasp'
+               dependencyCheck additionalArguments: '''
+                 --scan './' 
+                 --out './' 
+                 --format 'HTML' 
+                 --prettyPrint''', odcInstallation: 'owasp'
                }
              }
       }
