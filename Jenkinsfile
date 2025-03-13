@@ -10,6 +10,11 @@ pipeline{
           sh 'npm install --no-audit'
         
       }
+    stages('audit fix'){
+       steps{
+          sh 'npm audit --audit-level=critical'
+       }
+    }
     }
   }
 }
