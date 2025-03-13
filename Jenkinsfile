@@ -8,7 +8,7 @@ pipeline{
     stage('version test'){
       steps{
           sh 'npm -v'
-          sh 'echo hello'
+          sh 'echo hiiiiiiiiiiii'
         
       }
     }
