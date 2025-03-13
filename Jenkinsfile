@@ -5,10 +5,9 @@ pipeline{
 }
 
   stages{
-    stage('version test'){
+    stage('Installing Dependency'){
       steps{
-          sh 'npm -v'
-          sh 'echo hiiiiiiiiiiii'
+          sh 'npm install --no-audit'
         
       }
     }
