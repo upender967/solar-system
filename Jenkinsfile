@@ -24,6 +24,7 @@ pipeline{
               --format \\\'./\\\'
               --prettyPrint\'\'\'''', odcInstallation: 'owasp'
        }
+     }
     
     
   }
