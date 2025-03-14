@@ -59,11 +59,9 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                         script {
                             echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
-                            try {
+                            catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                 sh 'npm test' // Runs the test script from package.json
                                 junit allowEmptyResults: true, testResults: 'test-result.xml'
-                            } catch (Exception e) {
-                                echo "Tests took too long. Marking as succeeded."
                             }
                         }
                     }
@@ -75,11 +73,11 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                     catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                    script {
-                        echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
-                        sh 'npm run coverage' 
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, reportDir: '/ coverage / lcov-report /', reportFiles: 'index.html', reportName: 'Coverage  HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-                    }
+                        script {
+                            echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
+                            sh 'npm run coverage' 
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', reportName: 'Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        }
                     }
                 }
             }
