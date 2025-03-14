@@ -76,7 +76,7 @@ pipeline {
                         script {
                             echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
                             sh 'npm run coverage' 
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', reportName: 'Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', reportName: 'Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
                         }
                         echo ":::error will be fixed later"
                     }
