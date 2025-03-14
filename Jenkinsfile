@@ -1,8 +1,9 @@
 pipeline{
   agent any
   tools {
-  nodejs 'node-23-9-0'
+  nodejs 'node-js'
 }
+
 
   stages{
     stage('Installing Dependency'){
