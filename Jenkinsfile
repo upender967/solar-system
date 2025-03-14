@@ -28,6 +28,8 @@ pipeline{
                  --format 'ALL' 
                  --prettyPrint''', odcInstallation: 'owasp'
                    dependencyCheckPublisher pattern: 'http://172.210.59.109:8080/job/Jenkins-Project/job/main/2/execution/node/3/ws/dependency-check-report.xml', stopBuild: true
+                   publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: './', reportFiles: 'http://172.210.59.109:8080/job/Jenkins-Project/job/jenkins/2/execution/node/3/ws/dependency-check-jenkins.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                   junit stdioRetention: 'ALL', testResults: 'http://172.210.59.109:8080/job/Jenkins-Project/job/jenkins/2/execution/node/3/ws/dependency-check-junit.xml'
                }
              }
       }
