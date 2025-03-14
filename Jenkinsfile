@@ -10,7 +10,6 @@ pipeline {
         MONGO_URI = "mongodb://10.0.2.15:27017"
     }
 
-    
     stages {
         stage('Verify Node.js and NPM') {
             steps {
@@ -54,34 +53,33 @@ pipeline {
             }
         }
 
-                stage('JUnit Tests') {
-                  steps {
-                     timeout(time: 1, unit: 'MINUTES') { // Set timeout to 1 minute
-                     withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
-                     script {
-                     vecho "Connecting to MongoDB with user: ${MONGO_USERNAME}"
-                     try {
-                        sh 'npm test' // Runs the test script from package.json
-                        junit allowEmptyResults: true, testResults: 'test-result.xml'
-                    } catch (Exception e) {
-                        echo "Tests took too long. Marking as succeeded."
+        stage('JUnit Tests') {
+            steps {
+                timeout(time: 1, unit: 'MINUTES') { // Set timeout to 1 minute
+                    withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+                        script {
+                            echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
+                            try {
+                                sh 'npm test' // Runs the test script from package.json
+                                junit allowEmptyResults: true, testResults: 'test-result.xml'
+                            } catch (Exception e) {
+                                echo "Tests took too long. Marking as succeeded."
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-}      }
-                    junit allowEmptyResults: true, testResults: 'test-result.xml'
-                }
-            }
-        }
-        stage('JUnit Tests') {
+
+        stage('Test Coverage') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                     script {
                         echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
                         sh 'npm run coverage' 
-    }
+                    }
                 }
+            }
+        }
+    }
 }
-}   
