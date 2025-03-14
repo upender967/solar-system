@@ -27,6 +27,7 @@ pipeline{
                  --out './' 
                  --format 'ALL' 
                  --prettyPrint''', odcInstallation: 'owasp'
+                   dependencyCheckPublisher pattern: 'http://172.210.59.109:8080/job/Jenkins-Project/job/main/2/execution/node/3/ws/dependency-check-report.xml', stopBuild: true
                }
              }
       }
