@@ -10,6 +10,7 @@ pipeline {
         MONGO_URI = "mongodb://10.0.2.15:27017"
         MONGO_USERNAME = credentials('user_name')
         MONGO_PASSWORD = credentials('db-password')
+        SONAR_SCANNER_HOME = tool ('SonarQube-Scanner-7.04')
     }
 
     stages {
@@ -74,6 +75,21 @@ pipeline {
                     sh 'ls -R coverage' // Debugging: Check if the report exists
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE', message: 'Error will be fixed later') {
                         sh 'npm run coverage'
+                    }
+                }
+            }
+        }
+        stage('Coverage Tests') {
+            steps {
+                script {
+                    echo "the was : "
+                    sh '''
+                      $SONAR_SCANNER_HOME/bin/sonar-scanner \
+                          -Dsonar.organization=khaled-projects \
+                          -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
+                          -Dsonar.sources=. \
+                          -Dsonar.host.url=https://sonarcloud.io
+                    '''
                     }
                 }
             }
