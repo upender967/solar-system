@@ -29,7 +29,7 @@ pipeline{
                  --prettyPrint''', odcInstallation: 'owasp'
                    dependencyCheckPublisher pattern: 'dependency-check-report.xml', stopBuild: true, unstableTotalCritical: 2
                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'HTML Report-Project', reportTitles: '', useWrapperFileDirectly: true])
-                   junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
+                   
                }
              }
              
