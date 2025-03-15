@@ -43,6 +43,11 @@ pipeline{
 
                }
              }
+    stage("code coverage"){
+              steps{
+                sh 'npm code coverage'
+              }
+    }
     
   }
 }
