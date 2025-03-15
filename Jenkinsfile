@@ -16,7 +16,7 @@ pipeline{
       parallel{
               stage('audit check but not fixing'){
                steps{
-                  sh 'npm audit --audit-level=critical'
+                  sh 'npm audit '
                   sh 'echo hiiii'
                }
               }
@@ -37,7 +37,7 @@ pipeline{
     }
     stage('Unit Testing'){
                steps{
-                 sh 'npm list mongoose'
+                 sh 'npm test'
                }
              }
     
