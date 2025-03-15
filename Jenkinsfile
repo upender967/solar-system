@@ -37,7 +37,7 @@ pipeline{
     }
     stage('Unit Testing'){
                steps{
-                 sh 'npm list mongoose'
+                 sh 'npm test'
                }
              }
     
