@@ -8,7 +8,8 @@ pipeline {
     environment {
         /* Referencing credentials from Jenkins */
         MONGO_URI = "mongodb://10.0.2.15:27017"
-        BITBUCKET_COMMON_CREDS = credentials('mongo-credentials')
+        MONGO_USERNAME = credentials('user_name')
+        MONGO_PASSWORD = credentials('db-password')
     }
 
     stages {
@@ -58,9 +59,7 @@ pipeline {
             steps {
                 timeout(time: 1, unit: 'MINUTES') { // Set timeout to 1 minute
                         script {
-                            echo "Connecting to MongoDB with user: $BITBUCKET_COMMON_CREDS"
-                            echo " user - $BITBUCKET_COMMON_CREDS_USR "
-                            echo " password - $BITBUCKET_COMMON_CREDS_PSW "
+                            
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                 sh 'npm test' // Runs the test script from package.json
                                 junit allowEmptyResults: true, testResults: 'test-result.xml'
@@ -70,7 +69,7 @@ pipeline {
             }
         }
 
-        stage('Publish HTML Report') {
+        stage('coverage tests') {
          steps {
              script {
                  echo "Checking coverage report files..."
