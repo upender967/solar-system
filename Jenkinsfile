@@ -72,7 +72,7 @@ pipeline {
                 script {
                     echo "Checking coverage report files..."
                     sh 'ls -R coverage'
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                         sh 'npm run coverage'
                     }
                 }
