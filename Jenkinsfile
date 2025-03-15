@@ -75,7 +75,7 @@ pipeline {
                  echo "Checking coverage report files..."
                  sh 'ls -R coverage' // Debugging: Check if the report exists
                  sh 'npm run coverage'
-                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS' , message: 'error will be fixed later') {
+                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE' , message: 'error will be fixed later') {
                      echo "Publishing HTML Report..."
                  publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, 
                               reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', 
