@@ -38,6 +38,7 @@ pipeline{
     stage('Unit Testing'){
                steps{
                  sh 'npm test'
+                 sh 'echo hi'
                }
              }
     
