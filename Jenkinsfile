@@ -8,6 +8,7 @@ pipeline {
     environment {
         /* Referencing credentials from Jenkins */
         MONGO_URI = "mongodb://10.0.2.15:27017"
+        BITBUCKET_COMMON_CREDS = credentials('mongo-credentials')
     }
 
     stages {
@@ -56,15 +57,15 @@ pipeline {
         stage('JUnit Tests') {
             steps {
                 timeout(time: 1, unit: 'MINUTES') { // Set timeout to 1 minute
-                    withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                         script {
-                            echo "Connecting to MongoDB with user: ${MONGO_USERNAME}"
+                            echo "Connecting to MongoDB with user: $BITBUCKET_COMMON_CREDS"
+                            echo " user - $BITBUCKET_COMMON_CREDS_USR "
+                            echo " password - $BITBUCKET_COMMON_CREDS_PSW "
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                 sh 'npm test' // Runs the test script from package.json
                                 junit allowEmptyResults: true, testResults: 'test-result.xml'
                             }
                         }
-                    }
                 }
             }
         }
@@ -74,15 +75,14 @@ pipeline {
              script {
                  echo "Checking coverage report files..."
                  sh 'ls -R coverage' // Debugging: Check if the report exists
-
-                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                 sh 'npm run coverage'
+                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS' , message: 'error will be fixed later') {
                      echo "Publishing HTML Report..."
-                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, 
+                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, 
                               reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', 
                               reportName: 'Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
             }
         }
-        echo ":::error will be fixed later" // Ensures the error message is always visible
     }
 }
     }
