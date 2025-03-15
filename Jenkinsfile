@@ -9,7 +9,7 @@ pipeline {
         MONGO_URI = "mongodb://10.0.2.15:27017"
         MONGO_USERNAME = credentials('user_name')
         MONGO_PASSWORD = credentials('db-password')
-        SONAR_SCANNER_HOME = tool name: 'SonarQube-Scanner-7.04'
+        SONAR_SCANNER_HOME = tool('SonarQube-Scanner-7.04')
     }
 
     stages {
@@ -79,17 +79,19 @@ pipeline {
             }
         }
 
-        stage('Run SonarQube Analysis') {  // Renamed to avoid duplicate stage names
+        stage('Run SonarQube Analysis') {
             steps {
                 script {
-                    sh '''
-                      $SONAR_SCANNER_HOME/bin/sonar-scanner \
-                          -Dsonar.organization=khaled-projects \
-                          -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
-                          -Dsonar.sources=. \
-                          -Dsonar.host.url=https://sonarcloud.io \
-                          -Dsonar.login=${credentials('sonar-token')}
-                    '''
+                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                        sh '''
+                        $SONAR_SCANNER_HOME/bin/sonar-scanner \
+                            -Dsonar.organization=khaled-projects \
+                            -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=https://sonarcloud.io \
+                            -Dsonar.login=$SONAR_TOKEN
+                        '''
+                    }
                 }
             }
         }
