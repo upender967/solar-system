@@ -49,7 +49,7 @@ pipeline{
                 sh 'npm run coverage'
                 
               }
-    }
+          }
     
   }
 }
