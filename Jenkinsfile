@@ -17,7 +17,7 @@ pipeline{
               stage('audit check but not fixing'){
                steps{
                   sh 'npm audit '
-                  sh 'echo hiiii'
+                  
                }
               }
              stage('owasp' ){
