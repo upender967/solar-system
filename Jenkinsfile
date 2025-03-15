@@ -58,39 +58,35 @@ pipeline {
         stage('JUnit Tests') {
             steps {
                 timeout(time: 1, unit: 'MINUTES') { // Set timeout to 1 minute
-                        script {
-                            
-                            catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                                sh 'npm test' // Runs the test script from package.json
-                                
-                            }
+                    script {
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                            sh 'npm test' // Runs the test script from package.json
                         }
+                    }
                 }
             }
         }
 
-        stage('coverage tests') {
-         steps {
-             script {
-                 echo "Checking coverage report files..."
-                 sh 'ls -R coverage' // Debugging: Check if the report exists
-                 sh 'npm run coverage'
-                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE' , message: 'error will be fixed later') {
-                     
-                
+        stage('Coverage Tests') {
+            steps {
+                script {
+                    echo "Checking coverage report files..."
+                    sh 'ls -R coverage' // Debugging: Check if the report exists
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE', message: 'Error will be fixed later') {
+                        sh 'npm run coverage'
+                    }
+                }
             }
         }
     }
-}
+
+    post {
+        always {
+            echo "Publishing HTML Report..."
+            junit allowEmptyResults: true, testResults: 'test-result.xml'
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, 
+                         reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', 
+                         reportName: 'Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+        }
     }
-post {
-    always {
-         echo "Publishing HTML Report..."
-         junit allowEmptyResults: true, testResults: 'test-result.xml'
-         publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, 
-                      reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', 
-                      reportName: 'Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-        
-    }
-}
 }
