@@ -80,6 +80,12 @@ pipeline {
         }
 
         stage('Run SonarQube Analysis') {
+            when {
+                expression {
+                    // Run SonarQube analysis only on feature branches
+                    return env.BRANCH_NAME.startsWith('feature-')
+                }
+            }
             steps {
                 script {
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
@@ -108,3 +114,4 @@ pipeline {
         }
     }
 }
+
