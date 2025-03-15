@@ -38,6 +38,7 @@ pipeline{
     stage('Unit Testing'){
                steps{
                  sh 'npm test'
+                 junit allowEmptyResults: true, testResults: 'test-results.xml'
                }
              }
     
