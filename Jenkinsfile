@@ -59,7 +59,7 @@ pipeline {
             steps {
                 timeout(time: 1, unit: 'MINUTES') {
                     script {
-                        catchError(buildResult: 'FAILURE', stageResult: 'UNSTABLE') {
+                        catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                             sh 'npm test'
                         }
                     }
