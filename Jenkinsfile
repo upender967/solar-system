@@ -85,8 +85,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                         sh '''
                         $SONAR_SCANNER_HOME/bin/sonar-scanner \
-                            -Dsonar.javascript.node.maxspace=1024
-                            -Dsonar.exclusions=**/*.js,**/*.ts
+                            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
                             -Dsonar.organization=khaled-projects \
                             -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
                             -Dsonar.sources=. \
