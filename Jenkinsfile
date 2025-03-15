@@ -46,7 +46,7 @@ pipeline{
     stage("code coverage"){
               steps{
                 catchError(buildResult: 'SUCCESS', message: 'Next time ....', stageResult: 'UNSTABLE') 
-                sh 'npm run coverage'
+                  sh 'npm run coverage'
                 
               }
           }
