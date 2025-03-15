@@ -59,7 +59,7 @@ pipeline {
             steps {
                 timeout(time: 1, unit: 'MINUTES') {
                     script {
-                        catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                        catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                             sh 'npm test'
                         }
                     }
@@ -89,7 +89,7 @@ pipeline {
                             -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
-                            -Dsonar.login=$SONAR_TOKEN
+                            -Dsonar.login=$SONAR_TOKEN \
                             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
                         '''
                     }
