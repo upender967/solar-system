@@ -6,11 +6,10 @@ pipeline {
     }
 
     environment {
-        /* Referencing credentials from Jenkins */
         MONGO_URI = "mongodb://10.0.2.15:27017"
         MONGO_USERNAME = credentials('user_name')
         MONGO_PASSWORD = credentials('db-password')
-        SONAR_SCANNER_HOME = tool ('SonarQube-Scanner-7.04')
+        SONAR_SCANNER_HOME = tool name: 'SonarQube-Scanner-7.04'
     }
 
     stages {
@@ -58,10 +57,10 @@ pipeline {
 
         stage('JUnit Tests') {
             steps {
-                timeout(time: 1, unit: 'MINUTES') { // Set timeout to 1 minute
+                timeout(time: 1, unit: 'MINUTES') {
                     script {
                         catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                            sh 'npm test' // Runs the test script from package.json
+                            sh 'npm test'
                         }
                     }
                 }
@@ -72,25 +71,25 @@ pipeline {
             steps {
                 script {
                     echo "Checking coverage report files..."
-                    sh 'ls -R coverage' // Debugging: Check if the report exists
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE', message: 'Error will be fixed later') {
+                    sh 'ls -R coverage'
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         sh 'npm run coverage'
                     }
                 }
             }
         }
-        stage('Coverage Tests') {
+
+        stage('Run SonarQube Analysis') {  // Renamed to avoid duplicate stage names
             steps {
                 script {
-                    echo "the was : "
                     sh '''
                       $SONAR_SCANNER_HOME/bin/sonar-scanner \
                           -Dsonar.organization=khaled-projects \
                           -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
                           -Dsonar.sources=. \
-                          -Dsonar.host.url=https://sonarcloud.io
+                          -Dsonar.host.url=https://sonarcloud.io \
+                          -Dsonar.login=${credentials('sonar-token')}
                     '''
-                    }
                 }
             }
         }
