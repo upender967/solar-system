@@ -14,7 +14,7 @@ pipeline{
     }
     stage('parellel'){
       parallel{
-              stage('audit fix'){
+              stage('audit check but not fixing'){
                steps{
                   sh 'npm audit --audit-level=critical'
                   sh 'echo hiiii'
