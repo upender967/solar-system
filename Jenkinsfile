@@ -85,12 +85,12 @@ pipeline {
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                         sh '''
                         $SONAR_SCANNER_HOME/bin/sonar-scanner \
-                            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
                             -Dsonar.organization=khaled-projects \
                             -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
                             -Dsonar.login=$SONAR_TOKEN
+                            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
                         '''
                     }
                 }
