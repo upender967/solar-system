@@ -62,7 +62,7 @@ pipeline {
                             
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                 sh 'npm test' // Runs the test script from package.json
-                                junit allowEmptyResults: true, testResults: 'test-result.xml'
+                                
                             }
                         }
                 }
@@ -76,13 +76,21 @@ pipeline {
                  sh 'ls -R coverage' // Debugging: Check if the report exists
                  sh 'npm run coverage'
                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE' , message: 'error will be fixed later') {
-                     echo "Publishing HTML Report..."
-                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, 
-                              reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', 
-                              reportName: 'Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                     
+                
             }
         }
     }
 }
     }
+post {
+    always {
+         echo "Publishing HTML Report..."
+         junit allowEmptyResults: true, testResults: 'test-result.xml'
+         publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, 
+                      reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', 
+                      reportName: 'Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+        
+    }
+}
 }
