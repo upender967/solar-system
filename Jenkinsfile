@@ -14,7 +14,7 @@ pipeline{
     }
     stage('parellel'){
       parallel{
-              stage('audit fix'){
+              stage('audit check but not fixing'){
                steps{
                   sh 'npm audit --audit-level=critical'
                   sh 'echo hiiii'
@@ -27,11 +27,19 @@ pipeline{
                  --out './' 
                  --format 'ALL' 
                  --prettyPrint''', odcInstallation: 'owasp'
-                   dependencyCheckPublisher pattern: 'http://172.210.59.109:8080/job/Jenkins-Project/job/main/2/execution/node/3/ws/dependency-check-report.xml', stopBuild: true
+                   dependencyCheckPublisher pattern: 'dependency-check-report.xml', stopBuild: true, unstableTotalCritical: 2
+                   publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'HTML Report-Project', reportTitles: '', useWrapperFileDirectly: true])
+                   junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
                }
              }
+             
       }
     }
+    stage('Unit Testing'){
+               steps{
+                 sh 'npm test'
+               }
+             }
     
   }
 }
