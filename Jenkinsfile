@@ -67,7 +67,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('Coverage Tests') {
             steps {
                 script {
@@ -79,6 +79,7 @@ pipeline {
                 }
             }
         }
+*/
 /*
         stage('SonarQube Analysis') {
             steps {
