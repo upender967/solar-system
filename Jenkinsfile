@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         nodejs 'NodeJS 23.9.0'
+        docker 'docker-cli'
     }
 
     environment {
