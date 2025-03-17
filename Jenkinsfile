@@ -82,17 +82,19 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                script {
-                    withSonarQubeEnv('sonar-qube-server') {  // Use the configured SonarQube server
-                        sh '''
-                        $SONAR_SCANNER_HOME/bin/sonar-scanner \
-                            -Dsonar.organization=khaled-projects \
-                            -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
-                            -Dsonar.sources=. \
-                            -Dsonar.branch.name=feature-branch \
-                            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
-                        '''
-                    }
+                timeout(time: 1, unit: 'MINUTES') {
+                    script {
+                        withSonarQubeEnv('sonar-qube-server') {  // Use the configured SonarQube server
+                            sh '''
+                            $SONAR_SCANNER_HOME/bin/sonar-scanner \
+                                -Dsonar.organization=khaled-projects \
+                                -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
+                                -Dsonar.sources=. \
+                                -Dsonar.branch.name=feature-branch \
+                                -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+                            '''
+                        }
+                }
                 }
             }
 }
