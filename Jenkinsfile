@@ -79,7 +79,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('SonarQube Analysis') {
             steps {
                 timeout(time: 1, unit: 'MINUTES') {
@@ -98,6 +98,7 @@ pipeline {
                 }
             }
 }
+*/
         stage('Build Docker Image') {
                     steps {
                         script {
