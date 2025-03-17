@@ -79,23 +79,15 @@ pipeline {
             }
         }
 
-        stage('Run SonarQube Analysis') {
-            when {
-                expression {
-                    // Run SonarQube analysis only on feature branches
-                    return env.BRANCH_NAME.startsWith('feature-')
-                }
-            }
+        stage('SonarQube Analysis') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv('sonar-qube-server') {  // Use the configured server name
                         sh '''
                         $SONAR_SCANNER_HOME/bin/sonar-scanner \
                             -Dsonar.organization=khaled-projects \
                             -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url=https://sonarcloud.io \
-                            -Dsonar.login=$SONAR_TOKEN \
                             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
                         '''
                     }
