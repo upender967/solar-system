@@ -88,7 +88,7 @@ pipeline {
                             -Dsonar.organization=khaled-projects \
                             -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
                             -Dsonar.sources=. \
-                            -Dsonar.branch.name=${env.BRANCH_NAME} \
+                            -Dsonar.branch.name='feature-branch' \
                             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
                         '''
                     }
