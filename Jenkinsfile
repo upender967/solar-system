@@ -95,6 +95,17 @@ pipeline {
                 }
             }
 }
+        stage('Build Docker Image') {
+                    steps {
+                        script {
+                            // Print environment variables
+                            sh 'printenv'
+                
+                            // Build the Docker image with the Git commit as the tag
+                            sh "docker build -t your-image-name:${env.GIT_COMMIT} ."
+                        }
+                    }
+                }
 
     }
 
