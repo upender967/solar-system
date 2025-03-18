@@ -112,8 +112,40 @@ pipeline {
                         }
                     }
                 }
-
-    }
+          stage('Trivy Scan') {
+                    steps {
+                        script {
+                            // Scan for HIGH, MEDIUM, and LOW severities
+                            sh "trivy image --severity MEDIUM,LOW --format json --output non-critical-result-${env.GIT_COMMIT}.json --exit-code 0 solar-system-image:${env.GIT_COMMIT}"
+                            
+                            // Scan for HIGH and CRITICAL severities
+                            sh "trivy image --severity HIGH,CRITICAL --format json --output critical-result-${env.GIT_COMMIT}.json --exit-code 1 solar-system-image:${env.GIT_COMMIT}"
+                            
+                            // Convert JSON results to HTML and XML
+                            sh "trivy convert --format template --template \"@contrib/html.tpl\" --input non-critical-result-${env.GIT_COMMIT}.json --output non-critical-result-${env.GIT_COMMIT}.html"
+                            sh "trivy convert --format template --template \"@contrib/html.tpl\" --input critical-result-${env.GIT_COMMIT}.json --output critical-result-${env.GIT_COMMIT}.html"
+                        }
+                    }
+                    post {
+                                                    always {
+                                                        echo "Publishing Trivy Reports..."
+                                                        
+                                                        // Publish Trivy HTML Reports
+                                                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: false, 
+                                                                     reportDir: '.', reportFiles: "non-critical-result-${env.GIT_COMMIT}.html", 
+                                                                     reportName: 'Non-Critical Vulnerabilities Report', useWrapperFileDirectly: true])
+                                        
+                                                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: false, 
+                                                                     reportDir: '.', reportFiles: "critical-result-${env.GIT_COMMIT}.html", 
+                                                                     reportName: 'Critical Vulnerabilities Report', useWrapperFileDirectly: true])
+                                        
+                                                        // Publish Trivy XML Reports
+                                                        junit allowEmptyResults: true, testResults: "non-critical-result-${env.GIT_COMMIT}.xml"
+                                                        junit allowEmptyResults: true, testResults: "critical-result-${env.GIT_COMMIT}.xml"
+                                                    }
+        }
+              
+        }
 
     post {
         always {
