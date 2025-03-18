@@ -108,7 +108,7 @@ pipeline {
                             sh 'printenv'
                 
                             // Build the Docker image with the Git commit as the tag
-                            sh "docker build -t Solar-System-Image:${env.GIT_COMMIT} ."
+                            sh "docker build -t solar-system-image:${env.GIT_COMMIT} ."
                         }
                     }
                 }
