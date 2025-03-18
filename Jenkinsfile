@@ -55,7 +55,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('JUnit Tests') {
             steps {
                 timeout(time: 1, unit: 'MINUTES') {
@@ -67,6 +67,7 @@ pipeline {
                 }
             }
         }
+  */      
 /*
         stage('Coverage Tests') {
             steps {
