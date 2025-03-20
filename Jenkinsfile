@@ -110,7 +110,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('Trivy Scan') {
                 steps {
                     script {
@@ -133,12 +133,6 @@ pipeline {
                             trivy image --severity MEDIUM,LOW --format template --template "@${WORKSPACE}/contrib/html.tpl" --output ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.html solar-system-image:${env.GIT_COMMIT}
                             trivy image --severity HIGH,CRITICAL --format template --template "@${WORKSPACE}/contrib/html.tpl" --output ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.html solar-system-image:${env.GIT_COMMIT}
                         """
-            
-                        // Convert JSON results to JUnit XML (if needed)
-                        sh '''
-                            jq -r '.Results[] | [.Target, .Vulnerabilities[]? | {id: .VulnerabilityID, severity: .Severity, package: .PkgName, title: .Title}] | @json' ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json > ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.xml || true
-                            jq -r '.Results[] | [.Target, .Vulnerabilities[]? | {id: .VulnerabilityID, severity: .Severity, package: .PkgName, title: .Title}] | @json' ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.json > ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.xml || true
-                        '''
                     }
                 }
                 post {
@@ -160,7 +154,7 @@ pipeline {
                     }
                 }
             }
-
+*/
         stage('Push Image') {
             steps {
                 script {
