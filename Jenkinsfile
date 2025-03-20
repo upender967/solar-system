@@ -161,8 +161,8 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'dockerhub-credentials', url: 'https://index.docker.io/v1/') {
-                        sh "docker tag relyonlyurself/first-repo:latest relyonlyurself/first-repo:${env.GIT_COMMIT}"
-                        sh "docker push relyonlyurself/first-repo:latest"
+                        sh "docker tag solar-system-image:${env.GIT_COMMIT}  relyonlyurself/first-repo:${env.GIT_COMMIT}"
+                       
                         sh "docker push relyonlyurself/first-repo:${env.GIT_COMMIT}"
                     }
                 }
