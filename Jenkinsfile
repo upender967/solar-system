@@ -14,6 +14,14 @@ pipeline {
     }
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                script {
+                    // Clean up the workspace by deleting all old files
+                    deleteDir()
+                }
+            }
+        }
         stage('Verify Node.js and NPM') {
             steps {
                 script {
@@ -127,8 +135,8 @@ pipeline {
                     sh "trivy image --severity HIGH,CRITICAL --format json --output critical-result-${env.GIT_COMMIT}.json --exit-code 1 solar-system-image:${env.GIT_COMMIT}"
                     
                     // Convert JSON results to HTML and XML
-                    sh "trivy convert --format template --template \"@contrib/html.tpl\" --input non-critical-result-${env.GIT_COMMIT}.json --output non-critical-result-${env.GIT_COMMIT}.html"
-                    sh "trivy convert --format template --template \"@contrib/html.tpl\" --input critical-result-${env.GIT_COMMIT}.json --output critical-result-${env.GIT_COMMIT}.html"
+                    sh "trivy convert --format template --template \"@contrib/html.tpl\" non-critical-result-${env.GIT_COMMIT}.json --output non-critical-result-${env.GIT_COMMIT}.html"
+                    sh "trivy convert --format template --template \"@contrib/html.tpl\" critical-result-${env.GIT_COMMIT}.json --output critical-result-${env.GIT_COMMIT}.html"
                 }
             }
             post {
