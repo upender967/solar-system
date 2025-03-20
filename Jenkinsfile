@@ -112,51 +112,54 @@ pipeline {
         }
 
         stage('Trivy Scan') {
-            steps {
-                script {
-                    // Scan for HIGH, MEDIUM, and LOW severities
-                    sh "trivy image --severity MEDIUM,LOW --format json --output non-critical-result-${env.GIT_COMMIT}.json --exit-code 0 solar-system-image:${env.GIT_COMMIT}"
-                    
-                    // Scan for HIGH and CRITICAL severities
-                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                      sh "trivy image --severity HIGH,CRITICAL --format json --output critical-result-${env.GIT_COMMIT}.json --exit-code 1 solar-system-image:${env.GIT_COMMIT}"
-                           }
-
-                    
-                    // Print current working directory to Jenkins console
-                    sh "echo Current working directory: && pwd"
-
-                    // List the non-critical result JSON file to ensure it exists
-                    sh "echo Listing non-critical JSON file: && ls -l ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json"
-
-                    // Convert JSON results to HTML and XML
-                    sh '''
-                        mkdir -p ${WORKSPACE}/contrib
-                        curl -o ${WORKSPACE}/contrib/html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl
-                        trivy convert --format template --template "${WORKSPACE}/contrib/html.tpl" ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json --output ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.html
-                        trivy convert --format template --template "${WORKSPACE}/contrib/html.tpl" ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.json --output ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.html
-                        ''' 
+                steps {
+                    script {
+                        // Scan for MEDIUM and LOW vulnerabilities
+                        sh "trivy image --severity MEDIUM,LOW --format json --output ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json --exit-code 0 solar-system-image:${env.GIT_COMMIT}"
+                        
+                        // Scan for HIGH and CRITICAL vulnerabilities
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                            sh "trivy image --severity HIGH,CRITICAL --format json --output ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.json --exit-code 1 solar-system-image:${env.GIT_COMMIT}"
+                        }
+            
+                        // Fetch Trivy HTML template
+                        sh '''
+                            mkdir -p ${WORKSPACE}/contrib
+                            curl -sSL -o ${WORKSPACE}/contrib/html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl
+                        '''
+            
+                        // Convert JSON results to HTML
+                        sh """
+                            trivy image --severity MEDIUM,LOW --format template --template "@${WORKSPACE}/contrib/html.tpl" --output ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.html solar-system-image:${env.GIT_COMMIT}
+                            trivy image --severity HIGH,CRITICAL --format template --template "@${WORKSPACE}/contrib/html.tpl" --output ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.html solar-system-image:${env.GIT_COMMIT}
+                        """
+            
+                        // Convert JSON results to JUnit XML (if needed)
+                        sh '''
+                            jq -r '.Results[] | [.Target, .Vulnerabilities[]? | {id: .VulnerabilityID, severity: .Severity, package: .PkgName, title: .Title}] | @json' ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json > ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.xml || true
+                            jq -r '.Results[] | [.Target, .Vulnerabilities[]? | {id: .VulnerabilityID, severity: .Severity, package: .PkgName, title: .Title}] | @json' ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.json > ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.xml || true
+                        '''
+                    }
+                }
+                post {
+                    always {
+                        echo "Publishing Trivy Reports..."
+            
+                        // Publish HTML reports
+                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: false, 
+                                     reportDir: "${WORKSPACE}", reportFiles: "non-critical-result-${env.GIT_COMMIT}.html", 
+                                     reportName: 'Non-Critical Vulnerabilities Report', useWrapperFileDirectly: true])
+            
+                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: false, 
+                                     reportDir: "${WORKSPACE}", reportFiles: "critical-result-${env.GIT_COMMIT}.html", 
+                                     reportName: 'Critical Vulnerabilities Report', useWrapperFileDirectly: true])
+            
+                        // Publish JUnit XML reports
+                        junit allowEmptyResults: true, testResults: "${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.xml"
+                        junit allowEmptyResults: true, testResults: "${WORKSPACE}/critical-result-${env.GIT_COMMIT}.xml"
+                    }
                 }
             }
-            post {
-                always {
-                    echo "Publishing Trivy Reports..."
-
-                    // Publish Trivy HTML Reports
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: false, 
-                                 reportDir: '.', reportFiles: "non-critical-result-${env.GIT_COMMIT}.html", 
-                                 reportName: 'Non-Critical Vulnerabilities Report', useWrapperFileDirectly: true])
-
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: false, 
-                                 reportDir: '.', reportFiles: "critical-result-${env.GIT_COMMIT}.html", 
-                                 reportName: 'Critical Vulnerabilities Report', useWrapperFileDirectly: true])
-
-                    // Publish Trivy XML Reports
-                    junit allowEmptyResults: true, testResults: "non-critical-result-${env.GIT_COMMIT}.xml"
-                    junit allowEmptyResults: true, testResults: "critical-result-${env.GIT_COMMIT}.xml"
-                }
-            }
-        }
 
         stage('Push Image') {
             steps {
