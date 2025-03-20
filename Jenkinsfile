@@ -14,7 +14,6 @@ pipeline {
     }
 
     stages {
-        
 
         stage('Verify Node.js and NPM') {
             steps {
@@ -78,6 +77,7 @@ pipeline {
                 }
             }
         }
+
         stage('Generate Test Coverage') {
             steps {
                 script {
@@ -87,9 +87,7 @@ pipeline {
                     echo "Coverage issues detected, will be fixed later."
                 }
             }
-    }
-}
-}
+        }
 
         stage('Build Docker Image') {
             steps {
