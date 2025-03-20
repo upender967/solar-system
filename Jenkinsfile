@@ -160,7 +160,7 @@ pipeline {
         stage('Push Image') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'dockerhub-credentials', url: 'https://hub.docker.com/u/relyonlyurself/first-repo') {
+                    withDockerRegistry(credentialsId: 'dockerhub-credentials', url: 'https://index.docker.io/v1/') {
                         sh "docker tag relyonlyurself/first-repo:latest relyonlyurself/first-repo:${env.GIT_COMMIT}"
                         sh "docker push relyonlyurself/first-repo:latest"
                         sh "docker push relyonlyurself/first-repo:${env.GIT_COMMIT}"
