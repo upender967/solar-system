@@ -87,6 +87,7 @@ pipeline {
                     echo "Coverage issues detected, will be fixed later."
                 }
             }
+    }
 }
 }
 
