@@ -88,6 +88,7 @@ pipeline {
                 }
             }
         }
+
         /* stage('SonarQube Analysis') {
             steps {
                 script {
@@ -118,13 +119,13 @@ pipeline {
                     
                     // Scan for HIGH and CRITICAL severities
                     sh "trivy image --severity HIGH,CRITICAL --format json --output critical-result-${env.GIT_COMMIT}.json --exit-code 1 solar-system-image:${env.GIT_COMMIT}"
-                     // Print current working directory to Jenkins console
+                    
+                    // Print current working directory to Jenkins console
                     sh "echo Current working directory: && pwd"
 
                     // List the non-critical result JSON file to ensure it exists
                     sh "echo Listing non-critical JSON file: && ls -l ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json"
 
-                    
                     // Convert JSON results to HTML and XML
                     sh "trivy convert --format template --template \"@contrib/html.tpl\" ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json --output ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.html"
                     sh "trivy convert --format template --template \"@contrib/html.tpl\" ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.json --output ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.html"
@@ -149,8 +150,8 @@ pipeline {
                 }
             }
         }
-    }
-        stage(' Push Image') {
+
+        stage('Push Image') {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'dockerhub-credentials', url: 'https://hub.docker.com/u/relyonlyurself/first-repo') {
@@ -160,7 +161,8 @@ pipeline {
                     }
                 }
             }
-}
+        }
+    }
 
     post {
         always {
