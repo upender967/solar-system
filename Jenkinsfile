@@ -127,12 +127,14 @@ pipeline {
                             mkdir -p ${WORKSPACE}/contrib
                             curl -sSL -o ${WORKSPACE}/contrib/html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl
                         '''
-            
-                        // Convert JSON results to HTML
+                        
+                        // Convert JSON results to HTML using trivy convert (no need to fetch the template)
                         sh """
-                            trivy image --severity MEDIUM,LOW --format template --template "@${WORKSPACE}/contrib/html.tpl" --output ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.html solar-system-image:${env.GIT_COMMIT}
-                            trivy image --severity HIGH,CRITICAL --format template --template "@${WORKSPACE}/contrib/html.tpl" --output ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.html solar-system-image:${env.GIT_COMMIT}
+                            trivy convert --format html --output ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.html ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json
+                            trivy convert --format html --output ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.html ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.json
                         """
+                       
+                            
                     }
                 }
                 post {
