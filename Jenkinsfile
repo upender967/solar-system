@@ -14,6 +14,12 @@ pipeline {
     }
 
     stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Clean Workspace') {
             steps {
                 script {
@@ -22,11 +28,21 @@ pipeline {
                 }
             }
         }
+
         stage('Verify Node.js and NPM') {
             steps {
                 script {
                     sh 'node -v'
                     sh 'npm -v'
+                }
+            }
+        }
+
+        stage('Verify Package.json Exists') {
+            steps {
+                script {
+                    // List files in the workspace to verify package.json exists
+                    sh 'ls -la /var/jenkins_home/workspace/peline-nodejs-app_feature-branch@2'
                 }
             }
         }
@@ -64,7 +80,6 @@ pipeline {
             }
         }
 
-       
         stage('JUnit Tests') {
             steps {
                 timeout(time: 1, unit: 'MINUTES') {
@@ -76,42 +91,6 @@ pipeline {
                 }
             }
         }
-        
-
-        /*
-        stage('Coverage Tests') {
-            steps {
-                script {
-                    echo "Checking coverage report files..."
-                    sh 'ls -R coverage'
-                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                        sh 'npm run coverage'
-                    }
-                }
-            }
-        }
-        */
-
-        /*
-        stage('SonarQube Analysis') {
-            steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    script {
-                        withSonarQubeEnv('sonar-qube-server') {  // Use the configured SonarQube server
-                            sh '''
-                            $SONAR_SCANNER_HOME/bin/sonar-scanner \
-                                -Dsonar.organization=khaled-projects \
-                                -Dsonar.projectKey=khaled-projects_jenkins-pipeline \
-                                -Dsonar.sources=. \
-                                -Dsonar.branch.name=feature-branch \
-                                -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
-                            '''
-                        }
-                    }
-                }
-            }
-        }
-        */
 
         stage('Build Docker Image') {
             steps {
