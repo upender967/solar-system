@@ -118,7 +118,10 @@ pipeline {
                     sh "trivy image --severity MEDIUM,LOW --format json --output non-critical-result-${env.GIT_COMMIT}.json --exit-code 0 solar-system-image:${env.GIT_COMMIT}"
                     
                     // Scan for HIGH and CRITICAL severities
-                    sh "trivy image --severity HIGH,CRITICAL --format json --output critical-result-${env.GIT_COMMIT}.json --exit-code 0 solar-system-image:${env.GIT_COMMIT}"
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                      sh "trivy image --severity HIGH,CRITICAL --format json --output critical-result-${env.GIT_COMMIT}.json --exit-code 1 solar-system-image:${env.GIT_COMMIT}"
+                           }
+
                     
                     // Print current working directory to Jenkins console
                     sh "echo Current working directory: && pwd"
