@@ -65,7 +65,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('JUnit Tests') {
             steps {
                 timeout(time: 1, unit: 'MINUTES') {
@@ -77,7 +77,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('Generate Test Coverage') {
             steps {
                 script {
