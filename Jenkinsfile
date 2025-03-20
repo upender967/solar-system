@@ -14,20 +14,7 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Clean Workspace') {
-            steps {
-                script {
-                    // Clean up the workspace by deleting all old files
-                    deleteDir()
-                }
-            }
-        }
+        
 
         stage('Verify Node.js and NPM') {
             steps {
