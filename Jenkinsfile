@@ -150,7 +150,7 @@ pipeline {
             }
         }
     }
-        stage('Build and Push Image') {
+        stage(' Push Image') {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'dockerhub-credentials', url: 'https://hub.docker.com/u/relyonlyurself/first-repo') {
