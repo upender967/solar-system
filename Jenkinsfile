@@ -130,8 +130,12 @@ pipeline {
                     sh "echo Listing non-critical JSON file: && ls -l ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json"
 
                     // Convert JSON results to HTML and XML
-                    sh "trivy convert --format template --template \"@contrib/html.tpl\" ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json --output ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.html"
-                    sh "trivy convert --format template --template \"@contrib/html.tpl\" ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.json --output ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.html"
+                    sh '''
+                        mkdir -p ${WORKSPACE}/contrib
+                        curl -o ${WORKSPACE}/contrib/html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl
+                        trivy convert --format template --template "${WORKSPACE}/contrib/html.tpl" ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json --output ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.html
+                        trivy convert --format template --template "${WORKSPACE}/contrib/html.tpl" ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.json --output ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.html
+                        ''' 
                 }
             }
             post {
