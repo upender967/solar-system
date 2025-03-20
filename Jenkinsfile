@@ -120,8 +120,8 @@ pipeline {
                     sh "trivy image --severity HIGH,CRITICAL --format json --output critical-result-${env.GIT_COMMIT}.json --exit-code 1 solar-system-image:${env.GIT_COMMIT}"
                     
                     // Convert JSON results to HTML and XML
-                    sh "trivy convert --format template --template \"@contrib/html.tpl\" non-critical-result-${env.GIT_COMMIT}.json --output non-critical-result-${env.GIT_COMMIT}.html"
-                    sh "trivy convert --format template --template \"@contrib/html.tpl\" critical-result-${env.GIT_COMMIT}.json --output critical-result-${env.GIT_COMMIT}.html"
+                    sh "trivy convert --format template --template \"@contrib/html.tpl\" ./non-critical-result-${env.GIT_COMMIT}.json --output ./non-critical-result-${env.GIT_COMMIT}.html"
+                    sh "trivy convert --format template --template \"@contrib/html.tpl\" ./critical-result-${env.GIT_COMMIT}.json --output ./critical-result-${env.GIT_COMMIT}.html"
                 }
             }
             post {
