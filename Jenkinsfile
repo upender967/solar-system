@@ -124,8 +124,7 @@ pipeline {
                     // List the non-critical result JSON file to ensure it exists
                     sh "echo Listing non-critical JSON file: && ls -l ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json"
 
-                    // List the critical result JSON file to ensure it exists
-                    sh "echo 
+                    
                     // Convert JSON results to HTML and XML
                     sh "trivy convert --format template --template \"@contrib/html.tpl\" ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.json --output ${WORKSPACE}/non-critical-result-${env.GIT_COMMIT}.html"
                     sh "trivy convert --format template --template \"@contrib/html.tpl\" ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.json --output ${WORKSPACE}/critical-result-${env.GIT_COMMIT}.html"
