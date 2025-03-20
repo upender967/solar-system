@@ -150,6 +150,17 @@ pipeline {
             }
         }
     }
+        stage('Build and Push Image') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'dockerhub-credentials', url: 'https://hub.docker.com/u/relyonlyurself/first-repo') {
+                        sh "docker tag relyonlyurself/first-repo:latest relyonlyurself/first-repo:${env.GIT_COMMIT}"
+                        sh "docker push relyonlyurself/first-repo:latest"
+                        sh "docker push relyonlyurself/first-repo:${env.GIT_COMMIT}"
+                    }
+                }
+            }
+}
 
     post {
         always {
