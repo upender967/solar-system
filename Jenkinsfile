@@ -78,6 +78,13 @@ pipeline {
                 }
             }
         }
+        stage('Generate Test Coverage') {
+            steps {
+                script {
+                    sh 'npm run coverage'
+                }
+            }
+}
 
         stage('Build Docker Image') {
             steps {
