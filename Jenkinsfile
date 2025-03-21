@@ -104,26 +104,33 @@ pipeline {
                         sh '''
                         ssh -o StrictHostKeyChecking=no ubuntu@3.86.249.37 <<EOF
                         sudo -i -u ubuntu bash <<'EOS'
+                        
+                        echo "Logging into Docker Hub and pulling the image..."
+                        withDockerRegistry([credentialsId: 'dockerhub-credentials', url: 'https://index.docker.io/v1/']) {
+                            docker pull solar-system-image:${GIT_COMMIT}
+                        }
+        
                         if docker ps -a --format '{{.Names}}' | grep -q '^solar-system$'; then
                             echo "Stopping and removing existing container..."
                             docker stop solar-system && docker rm solar-system
                         else
                             echo "No existing container found."
                         fi
+                        
                         docker run -d --name solar-system \
                             -p 3000:3000 \
                             -e MONGO_URI=$MONGO_URI \
                             -e MONGO_USERNAME=$MONGO_USERNAME \
                             -e MONGO_PASSWORD=$MONGO_PASSWORD \
-                            solar-system-image:$GIT_COMMIT
+                            solar-system-image:${GIT_COMMIT}
                         EOS
                         EOF
                         '''
-}
-
-                }
             }
         }
+    }
+}
+
     }
 
     post {
