@@ -102,7 +102,7 @@ pipeline {
                         script {
                             sshagent(['ssh-credentials']) {
                                 sh '''
-                                ssh -o StrictHostKeyChecking=no ubuntu@3.86.249.37 bash -c '
+                                ssh -o StrictHostKeyChecking=no ubuntu@54.84.167.209  bash -c '
                                 echo "Waiting for a moment to allow the image to be available on Docker Hub..."
                                 #sleep 40  # Wait for 20 seconds
                                 # echo "Pulling the latest Docker image..."
