@@ -103,6 +103,7 @@ pipeline {
                     sshagent(['ssh-credentials']) {
                         sh '''
                         ssh -o StrictHostKeyChecking=no ubuntu@3.86.249.37 <<EOF
+                        sudo -i -u ubuntu bash <<'EOS'
                         if docker ps -a --format '{{.Names}}' | grep -q '^solar-system$'; then
                             echo "Stopping and removing existing container..."
                             docker stop solar-system && docker rm solar-system
@@ -115,9 +116,11 @@ pipeline {
                             -e MONGO_USERNAME=$MONGO_USERNAME \
                             -e MONGO_PASSWORD=$MONGO_PASSWORD \
                             solar-system-image:$GIT_COMMIT
+                        EOS
                         EOF
                         '''
-                    }
+}
+
                 }
             }
         }
