@@ -169,6 +169,36 @@ pipeline {
             }
         }
     }
+        stage('Deploy Solar System Container') {
+            when {
+                branch 'feature-branch'
+            }
+            steps {
+                script {
+                    sshagent(['ssh-credentials']) {
+                        sh """
+                        ssh -o StrictHostKeyChecking=no ubuntu@${HOST} << 'EOF'
+                            # Check if the container exists
+                            if docker ps -a --format '{{.Names}}' | grep -q '^solar-system\$'; then
+                                echo "Stopping and removing existing container..."
+                                docker stop solar-system && docker rm solar-system
+                            else
+                                echo "No existing container found."
+                            fi
+        
+                            # Deploy the new container
+                            docker run -d --name solar-system \\
+                                -p 3000:3000 \\
+                                -e MONGO_URI="mongodb://10.0.2.15:27017" \\
+                                -e MONGO_USERNAME="${MONGO_USERNAME}" \\
+                                -e MONGO_PASSWORD="${MONGO_PASSWORD}" \\
+                                solar-system-image:${env.GIT_COMMIT}
+                        EOF
+                        """
+                    }
+                }
+            }
+        }
 
     post {
         always {
