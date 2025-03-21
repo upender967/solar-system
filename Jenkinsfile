@@ -95,38 +95,38 @@ pipeline {
         }
 
         stage('Deploy Solar System Container') {
-            when {
-                branch 'feature-branch'
-            }
-            steps {
-                script {
-                    sshagent(['ssh-credentials']) {
-                        sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@3.86.249.37 <<'EOF'
-                        echo "Waiting for a moment to allow the image to be available on Docker Hub..."
-                        #sleep 40  # Wait for 20 seconds
-                        # echo "Pulling the latest Docker image..."
-                        # docker pull solar-system-image:${GIT_COMMIT}
-        
-                        if docker ps -a --format '{{.Names}}' | grep -q '^solar-system$'; then
-                            echo "Stopping and removing existing container..."
-                            docker stop solar-system && docker rm solar-system
-                        else
-                            echo "No existing container found."
-                        fi
-        
-                        docker run -d --name solar-system \
-                            -p 3000:3000 \
-                            -e MONGO_URI=$MONGO_URI \
-                            -e MONGO_USERNAME=$MONGO_USERNAME \
-                            -e MONGO_PASSWORD=$MONGO_PASSWORD \
-                            relyonlyurself/first-repo:$GIT_COMMIT
-                        EOF
-                        '''
+                    when {
+                        branch 'feature-branch'
+                    }
+                    steps {
+                        script {
+                            sshagent(['ssh-credentials']) {
+                                sh '''
+                                ssh -o StrictHostKeyChecking=no ubuntu@3.86.249.37 bash -c '
+                                echo "Waiting for a moment to allow the image to be available on Docker Hub..."
+                                #sleep 40  # Wait for 20 seconds
+                                # echo "Pulling the latest Docker image..."
+                                # docker pull solar-system-image:${GIT_COMMIT}
+                
+                                if docker ps -a --format "{{.Names}}" | grep -q "^solar-system$"; then
+                                    echo "Stopping and removing existing container..."
+                                    docker stop solar-system && docker rm solar-system
+                                else
+                                    echo "No existing container found."
+                                fi
+                
+                                docker run -d --name solar-system \
+                                    -p 3000:3000 \
+                                    -e MONGO_URI=$MONGO_URI \
+                                    -e MONGO_USERNAME=$MONGO_USERNAME \
+                                    -e MONGO_PASSWORD=$MONGO_PASSWORD \
+                                    relyonlyurself/first-repo:$GIT_COMMIT
+                                '
+                                '''
+                            }
+                        }
                     }
                 }
-            }
-        }
     }
     post {
         always {
