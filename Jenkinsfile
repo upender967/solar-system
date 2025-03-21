@@ -101,23 +101,23 @@ pipeline {
             steps {
                 script {
                     sshagent(['ssh-credentials']) {
-                        sh """
-                        ssh -o StrictHostKeyChecking=no ubuntu@3.86.249.37 << 'EOF'
-                            if docker ps -a --format '{{.Names}}' | grep -q '^solar-system$'; then
-                                echo "Stopping and removing existing container..."
-                                docker stop solar-system && docker rm solar-system
-                            else
-                                echo "No existing container found."
-                            fi
-                            docker run -d --name solar-system \
-                                -p 3000:3000 \
-                                -e MONGO_URI="mongodb://10.0.2.15:27017" \
-                                -e MONGO_USERNAME="${MONGO_USERNAME}" \
-                                -e MONGO_PASSWORD="${MONGO_PASSWORD}" \
-                                solar-system-image:${env.GIT_COMMIT}
-                        EOF
-                        """
-                    }
+                                sh """
+                                ssh -o StrictHostKeyChecking=no ubuntu@3.86.249.37 << 'EOF'
+                                    if docker ps -a --format '{{.Names}}' | grep -q '^solar-system$'; then
+                                        echo "Stopping and removing existing container..."
+                                        docker stop solar-system && docker rm solar-system
+                                    else
+                                        echo "No existing container found."
+                                    fi
+                                    docker run -d --name solar-system \
+                                        -p 3000:3000 \
+                                        -e MONGO_URI="mongodb://10.0.2.15:27017" \
+                                        -e MONGO_USERNAME="${MONGO_USERNAME}" \
+                                        -e MONGO_PASSWORD="${MONGO_PASSWORD}" \
+                                        solar-system-image:${env.GIT_COMMIT}
+                                EOF
+                                """
+                   }
                 }
             }
         }
