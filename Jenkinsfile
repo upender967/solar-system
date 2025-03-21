@@ -114,13 +114,14 @@ pipeline {
                                     -e MONGO_URI=\${MONGO_URI} \
                                     -e MONGO_USERNAME=\${MONGO_USERNAME} \
                                     -e MONGO_PASSWORD=\${MONGO_PASSWORD} \
-                                    solar-system-image:\${env.GIT_COMMIT}
+                                    solar-system-image:\${GIT_COMMIT}
                             END
                             """
                         }
-        }
-    }
-}
+                    }
+                }
+            }
+
 
     }
     }
