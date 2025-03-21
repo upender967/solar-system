@@ -103,9 +103,10 @@ pipeline {
                     sshagent(['ssh-credentials']) {
                         sh '''
                         ssh -o StrictHostKeyChecking=no ubuntu@3.86.249.37 <<EOF
-                        
-                         echo "Pulling the latest Docker image..."
-                         docker pull solar-system-image:${GIT_COMMIT}
+                        echo "Waiting for a moment to allow the image to be available on Docker Hub..."
+                        sleep 40  # Wait for 20 seconds
+                        # echo "Pulling the latest Docker image..."
+                        # docker pull solar-system-image:${GIT_COMMIT}
         
                         if docker ps -a --format '{{.Names}}' | grep -q '^solar-system$'; then
                             echo "Stopping and removing existing container..."
