@@ -177,7 +177,7 @@ pipeline {
                 script {
                     sshagent(['ssh-credentials']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no ubuntu@${HOST} << 'EOF'
+                        ssh -o StrictHostKeyChecking=no ubuntu@3.86.249.37 << 'EOF'
                             # Check if the container exists
                             if docker ps -a --format '{{.Names}}' | grep -q '^solar-system\$'; then
                                 echo "Stopping and removing existing container..."
