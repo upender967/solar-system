@@ -127,6 +127,19 @@ pipeline {
                         }
                     }
                 }
+        stage('Run EC2 Integration Script') {
+            when {
+                branch 'feature-branch'  // Trigger only when the branch is 'feature-branch'
+            }
+            steps {
+                script {
+                    withAWS(region: 'us-east-1', credentials: 'awzs-credentials') {
+                        // Running the shell script in the EC2 instance
+                        sh './ec2-integration-script.sh'  // Ensure this script is in your repository or provide the correct path
+                    }
+                }
+            }
+        }
     }
     post {
         always {
