@@ -1,28 +1,29 @@
 #!/bin/bash
 
-# Install dependencies (if necessary)
-install_dependencies() {
-    sudo apt-get update -y
-    sudo apt-get install -y jq curl awscli
-}
-
 # Fetch EC2 Instance ID (from instance metadata)
-fetch_instance_id() {
-    INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-}
+# This is not necessary anymore since we're using the AWS CLI directly
 
 # Fetch EC2 Instance DNS using AWS CLI
 fetch_dns_name() {
     DNS_NAME=$(aws ec2 describe-instances \
-        --instance-ids $INSTANCE_ID \
         --query "Reservations[0].Instances[0].PublicDnsName" \
         --output text)
+    
+    if [ -z "$DNS_NAME" ]; then
+        echo "Failed to fetch the Public DNS Name. Exiting."
+        exit 1
+    fi
 }
 
 # Query data from the API
 query_planet_collection_data() {
     API_ENDPOINT="http://$DNS_NAME:3000/planets-collection-api/data"
     response=$(curl -s $API_ENDPOINT)
+    
+    if [ -z "$response" ]; then
+        echo "No response received from the API. Exiting."
+        exit 1
+    fi
     echo "$response"
 }
 
@@ -38,8 +39,6 @@ run_integration_test() {
 
 # Main function to execute steps
 main() {
-    install_dependencies
-    fetch_instance_id
     fetch_dns_name
     query_planet_collection_data
     run_integration_test
