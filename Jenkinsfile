@@ -104,8 +104,8 @@ pipeline {
                         sh '''
                         ssh -o StrictHostKeyChecking=no ubuntu@3.86.249.37 <<EOF
                         
-                        # echo "Pulling the latest Docker image..."
-                        # docker pull solar-system-image:${GIT_COMMIT}
+                         echo "Pulling the latest Docker image..."
+                         docker pull solar-system-image:${GIT_COMMIT}
         
                         if docker ps -a --format '{{.Names}}' | grep -q '^solar-system$'; then
                             echo "Stopping and removing existing container..."
