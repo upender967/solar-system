@@ -104,7 +104,7 @@ pipeline {
                         sh '''
                         ssh -o StrictHostKeyChecking=no ubuntu@3.86.249.37 <<EOF
                         echo "Waiting for a moment to allow the image to be available on Docker Hub..."
-                        sleep 40  # Wait for 20 seconds
+                        #sleep 40  # Wait for 20 seconds
                         # echo "Pulling the latest Docker image..."
                         # docker pull solar-system-image:${GIT_COMMIT}
         
@@ -120,7 +120,7 @@ pipeline {
                             -e MONGO_URI=$MONGO_URI \
                             -e MONGO_USERNAME=$MONGO_USERNAME \
                             -e MONGO_PASSWORD=$MONGO_PASSWORD \
-                            solar-system-image:${GIT_COMMIT}
+                            relyonlyurself/first-repo:${env.GIT_COMMIT}
                         EOF
                         '''
                     }
