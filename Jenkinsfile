@@ -170,11 +170,13 @@ pipeline {
     post {
         always {
             // Check if the folder exists, then remove it
-            if (fileExists('tpcplusplus')) {
-                sh 'rm -rf tpcplusplus'
-                echo "Removed 'tpcplusplus' folder."
-            } else {
-                echo "'tpcplusplus' folder does not exist."
+            script {
+                if (fileExists('tpcplusplus')) {
+                    sh 'rm -rf tpcplusplus'
+                    echo "Removed 'tpcplusplus' folder."
+                } else {
+                    echo "'tpcplusplus' folder does not exist."
+                }
             }
             echo "Publishing HTML Report..."
             junit allowEmptyResults: true, testResults: 'test-result.xml'
