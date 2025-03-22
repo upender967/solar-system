@@ -97,7 +97,7 @@ pipeline {
 
         stage('Deploy Solar System Container') {
                     when {
-                        branch 'feature-branch'
+                        branch 'PR*'
                     }
                     steps {
                         script {
