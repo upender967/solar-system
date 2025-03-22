@@ -150,7 +150,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    rm -rf tpcplusplus
+                    
                     git clone https://$GITEA_TOKEN@github.com/khaled-projects/tpcplusplus.git tpcplusplus
         
                     cd tpcplusplus
@@ -169,6 +169,15 @@ pipeline {
     }
     post {
         always {
+            post {
+
+            // Check if the folder exists, then remove it
+            if (fileExists('tpcplusplus')) {
+                sh 'rm -rf tpcplusplus'
+                echo "Removed 'tpcplusplus' folder."
+            } else {
+                echo "'tpcplusplus' folder does not exist."
+            }
             echo "Publishing HTML Report..."
             junit allowEmptyResults: true, testResults: 'test-result.xml'
             publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, 
