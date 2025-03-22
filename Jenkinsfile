@@ -169,8 +169,6 @@ pipeline {
     }
     post {
         always {
-            post {
-
             // Check if the folder exists, then remove it
             if (fileExists('tpcplusplus')) {
                 sh 'rm -rf tpcplusplus'
