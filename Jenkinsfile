@@ -97,7 +97,7 @@ pipeline {
 
         stage('Deploy Solar System Container') {
                     when {
-                        branch 'PR*'
+                        branch 'feature-branch'
                     }
                     steps {
                         script {
@@ -145,7 +145,7 @@ pipeline {
      */ 
         stage('Update Image Tag') {
             when {
-                branch 'feature-branch'  // Runs only on the 'feature' branch
+                branch 'PR*'  // Runs only on the 'feature' branch
             }
             steps {
                 script {
@@ -162,6 +162,7 @@ pipeline {
                     git add kubernetes/deployment.yaml
                     git commit -m "Updated image to relyonlyurself/first-repo:$GIT_COMMIT"
                     git push https://$GITEA_TOKEN@github.com/khaled-projects/tpcplusplus.git main
+                    exit 0
                     '''
                 }
             }
