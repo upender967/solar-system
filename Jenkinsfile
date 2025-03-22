@@ -10,6 +10,7 @@ pipeline {
         MONGO_USERNAME = credentials('user_name')
         MONGO_PASSWORD = credentials('db-password')
         SONAR_SCANNER_HOME = tool('SonarQube-Scanner-7.04')
+        GITEA_TOKEN = credentials('tpplus-token')
     }
 
     stages {
@@ -141,7 +142,30 @@ pipeline {
                 }
             }
         }
-     */   
+     */ 
+        stage('Update Image Tag') {
+            when {
+                branch 'feature-branch'  // Runs only on the 'feature' branch
+            }
+            steps {
+                script {
+                    sh '''
+                    rm -rf tpcplusplus
+                    git clone https://$GITEA_TOKEN@github.com/khaled-projects/tpcplusplus.git tpcplusplus
+        
+                    cd tpcplusplus
+                    git config --global user.email "khaledneji25@gmail.com"
+                    git config --global user.name "khaled-projects"
+        
+                    sed -i "s|image: relyonlyurself/first-repo:[^ ]*|image: relyonlyurself/first-repo:$GIT_COMMIT|" kubernetes/deployment.yaml
+        
+                    git add kubernetes/deployment.yaml
+                    git commit -m "Updated image to relyonlyurself/first-repo:$GIT_COMMIT"
+                    git push https://$GITEA_TOKEN@github.com/khaled-projects/tpcplusplus.git main
+                    '''
+                }
+            }
+        }
     }
     post {
         always {
