@@ -137,7 +137,7 @@ pipeline {
                 script {
                     withAWS(region: 'us-east-1', credentials: 'awzs-credentials') {
                         // Running the shell script in the EC2 instance
-                        sh './ec2-integration-script.sh'  // Ensure this script is in your repository or provide the correct path oooooopppdss
+                        sh './ec2-integration-script.sh'  // Ensure this script is in your repository or provide the correct path 
                     }
                 }
             }
