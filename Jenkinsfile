@@ -11,6 +11,7 @@ pipeline {
         MONGO_PASSWORD = credentials('db-password')
         SONAR_SCANNER_HOME = tool('SonarQube-Scanner-7.04')
         GITEA_TOKEN = credentials('tpplus-token')
+        S3_BUCKET = 'your-s3-bucket-name' // Specify your S3 bucket name
     }
 
     stages {
@@ -235,6 +236,31 @@ pipeline {
                     }
                 }
             }
+        stage('Upload Reports to S3') {
+            steps {
+                script {
+                    // Uploading HTML coverage report to S3
+                    sh """
+                        aws s3 cp coverage/lcov-report/index.html s3://${S3_BUCKET}/reports/coverage/lcov-report/index.html
+                    """
+
+                    // Uploading ZAP report to S3
+                    sh """
+                        aws s3 cp zap-reports/zap_report.html s3://${S3_BUCKET}/reports/zap/zap_report.html
+                        aws s3 cp zap-reports/zap_report.xml s3://${S3_BUCKET}/reports/zap/zap_report.xml
+                        aws s3 cp zap-reports/zap_report.json s3://${S3_BUCKET}/reports/zap/zap_report.json
+                    """
+
+                    // Upload Trivy reports
+                    sh """
+                        aws s3 cp trivy-high-critical.html s3://${S3_BUCKET}/reports/trivy/trivy-high-critical.html
+                        aws s3 cp trivy-medium-low.html s3://${S3_BUCKET}/reports/trivy/trivy-medium-low.html
+                        aws s3 cp trivy-high-critical.xml s3://${S3_BUCKET}/reports/trivy/trivy-high-critical.xml
+                        aws s3 cp trivy-medium-low.xml s3://${S3_BUCKET}/reports/trivy/trivy-medium-low.xml
+                    """
+                }
+            }
+        }
     }
     post {
         always {
