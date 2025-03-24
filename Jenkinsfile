@@ -74,7 +74,19 @@ pipeline {
                 }
             }
         }
-
+        stage('SonarQube Scan') {
+            steps {
+                script {
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectKey=solar-system \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://your-sonarqube-server:9000 \
+                            -Dsonar.login=${credentials('sonar-token')}"
+                    }
+                }
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 script {
@@ -83,7 +95,23 @@ pipeline {
                 }
             }
         }
-
+        stage('Trivy Security Scan & Report Conversion') {
+                steps {
+                    script {
+                        // Scan for High & Critical vulnerabilities (Exit 1 if found)
+                        sh "trivy image --severity HIGH,CRITICAL --exit-code 1 --format json -o trivy-high-critical.json solar-system-image:${env.GIT_COMMIT}"
+            
+                        // Scan for Medium & Low vulnerabilities (Exit 0)
+                        sh "trivy image --severity MEDIUM,LOW --exit-code 0 --format json -o trivy-medium-low.json solar-system-image:${env.GIT_COMMIT}"
+            
+                        // Convert JSON reports to HTML and XML
+                        sh "trivy convert --format template --template @/usr/local/share/trivy/templates/html.tpl -i trivy-high-critical.json -o trivy-high-critical.html"
+                        sh "trivy convert --format template --template @/usr/local/share/trivy/templates/html.tpl -i trivy-medium-low.json -o trivy-medium-low.html"
+                        sh "trivy convert --format sarif -i trivy-high-critical.json -o trivy-high-critical.xml"
+                        sh "trivy convert --format sarif -i trivy-medium-low.json -o trivy-medium-low.xml"
+                    }
+                }
+            }
         stage('Push Image') {
             steps {
                 script {
@@ -127,8 +155,7 @@ pipeline {
                             }
                         }
                     }
-                }
-       /* 
+                } 
         stage('Run EC2 Integration Script') {
             when {
                 branch 'feature-branch'  // Trigger only when the branch is 'feature-branch'
@@ -142,7 +169,6 @@ pipeline {
                 }
             }
         }
-     */ 
         stage('Update Image Tag') {
             when {
                 branch 'PR*'  // Runs only on the 'feature' branch
