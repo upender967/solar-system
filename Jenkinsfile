@@ -176,6 +176,22 @@ pipeline {
                 }
             }
         }
+        stage('ZAP DAST Scan') {
+                steps {
+                    script {
+                        sh '''
+                        mkdir -p zap-reports
+                        chmod 777 zap-reports  # Grant full permissions
+            
+                        docker run --rm --name zap-dast \
+                            -v $(pwd)/zap-reports:/zap/wrk/ \
+                            --user $(id -u):$(id -g) \  # Run with current user permissions
+                            owasp/zap2docker-stable:latest \
+                            zap-baseline.py -t http://your-app-url/api/doc -r zap_report.html -x zap_report.xml -J zap_report.json
+                        '''
+                    }
+                }
+            }
     }
     post {
         always {
