@@ -172,7 +172,7 @@ pipeline {
         }
         stage('Update Image Tag') {
             when {
-                branch 'PR*'  // Runs only on the 'feature' branch
+                branch 'PR*'  
             }
             steps {
                 script {
@@ -237,6 +237,9 @@ pipeline {
                 }
             } 
         stage('Prepare and Upload Reports') {
+                when {
+                       branch 'PR*'  // Runs only on the 'feature' branch
+                     }
                 steps {
                     script {
                         // Create a new directory for the reports
