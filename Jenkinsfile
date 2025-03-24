@@ -167,6 +167,15 @@ pipeline {
                 }
             }
         }
+        stage('Approval') {
+            steps {
+                script {
+                    timeout(time: 1, unit: 'DAYS') {  // Timeout after 1 day
+                        input message: 'PR Approved and ArgoCD Synced?', ok: 'Proceed'
+                    }
+                }
+            }
+        }
     }
     post {
         always {
