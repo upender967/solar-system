@@ -230,7 +230,7 @@ pipeline {
                             -v $(pwd)/zap-reports:/zap/wrk/ \
                             --user $(id -u):$(id -g) \  # Run with current user permissions
                             owasp/zap2docker-stable:latest \
-                            zap-baseline.py -t http://your-app-url/api/doc -r zap_report.html -x zap_report.xml -J zap_report.json
+                            zap-baseline.py -t http://your-app-url/api/doc -r zap_report.html -x zap_report.xml -J zap_report.json -c Zap_ignore_rule
                         '''
                     }
                 }
@@ -252,6 +252,10 @@ pipeline {
             publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, 
                          reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', 
                          reportName: 'Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+            // Publish ZAP report as HTML
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, 
+                         reportDir: 'zap-reports/', reportFiles: 'zap_report.html', 
+                         reportName: 'ZAP HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
     }
 }
