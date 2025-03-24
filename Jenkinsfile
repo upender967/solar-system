@@ -193,6 +193,23 @@ pipeline {
                 }
             }
         }
+        stage('Create Gitea PR') {
+                    steps {
+                        script {
+                            sh """
+                            curl -X POST -H "Content-Type: application/json" \\
+                                 -H "Authorization: token YOUR_GITEA_TOKEN" \\
+                                 -d '{
+                                      "title": "Update Image to relyonlyurself/first-repo:${GIT_COMMIT}",
+                                      "body": "This PR updates the Docker image in deployment.yaml to use the new tag: ${GIT_COMMIT}",
+                                      "head": "feature-branch",
+                                      "base": "main"
+                                  }' \\
+                                 https://gitea.example.com/api/v1/repos/khaled-projects/tpcplusplus/pulls
+                            """
+                        }
+                    }
+                }
         stage('Approval') {
             steps {
                 script {
