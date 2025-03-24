@@ -235,33 +235,37 @@ pipeline {
                         '''
                     }
                 }
-            }
-        stage('Upload Reports to S3') {
+            } 
+        stage('Prepare and Upload Reports') {
             steps {
                 script {
-                    // Uploading HTML coverage report to S3
+                    // Create a new directory for the reports
+                    def reportsDir = "reports-${BUILD_ID}"
                     sh """
-                        aws s3 cp coverage/lcov-report/index.html s3://${S3_BUCKET}/reports/coverage/lcov-report/index.html
+                        mkdir -p ${reportsDir}
+                        cp coverage/lcov-report/index.html ${reportsDir}/lcov-report.html
+                        cp zap-reports/* ${reportsDir}/
+                        cp trivy* ${reportsDir}/
+                        cp dependency* ${reportsDir}/
+                        cp test-result.xml ${reportsDir}/
                     """
 
-                    // Uploading ZAP report to S3
-                    sh """
-                        aws s3 cp zap-reports/zap_report.html s3://${S3_BUCKET}/reports/zap/zap_report.html
-                        aws s3 cp zap-reports/zap_report.xml s3://${S3_BUCKET}/reports/zap/zap_report.xml
-                        aws s3 cp zap-reports/zap_report.json s3://${S3_BUCKET}/reports/zap/zap_report.json
-                    """
+                    // List files to ensure they are copied
+                    sh "ls -l ${reportsDir}"
 
-                    // Upload Trivy reports
-                    sh """
-                        aws s3 cp trivy-high-critical.html s3://${S3_BUCKET}/reports/trivy/trivy-high-critical.html
-                        aws s3 cp trivy-medium-low.html s3://${S3_BUCKET}/reports/trivy/trivy-medium-low.html
-                        aws s3 cp trivy-high-critical.xml s3://${S3_BUCKET}/reports/trivy/trivy-high-critical.xml
-                        aws s3 cp trivy-medium-low.xml s3://${S3_BUCKET}/reports/trivy/trivy-medium-low.xml
+                    // Upload the entire directory to S3 using S3 Upload Plugin
+                    s3Upload(
+                        bucket: "${S3_BUCKET}",
+                        path: "reports/${reportsDir}/",
+                        file: "${reportsDir}/",
+                        includePathPattern: "**/*",  // Ensures all files in the directory are uploaded
+                        recursive: true
                     """
                 }
             }
         }
     }
+}
     post {
         always {
             // Check if the folder exists, then remove it
