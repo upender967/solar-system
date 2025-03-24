@@ -237,34 +237,35 @@ pipeline {
                 }
             } 
         stage('Prepare and Upload Reports') {
-            steps {
-                script {
-                    // Create a new directory for the reports
-                    def reportsDir = "reports-${BUILD_ID}"
-                    sh """
-                        mkdir -p ${reportsDir}
-                        cp coverage/lcov-report/index.html ${reportsDir}/lcov-report.html
-                        cp zap-reports/* ${reportsDir}/
-                        cp trivy* ${reportsDir}/
-                        cp dependency* ${reportsDir}/
-                        cp test-result.xml ${reportsDir}/
-                    """
-
-                    // List files to ensure they are copied
-                    sh "ls -l ${reportsDir}"
-
-                    // Upload the entire directory to S3 using S3 Upload Plugin
-                    s3Upload(
-                        bucket: "${S3_BUCKET}",
-                        path: "reports/${reportsDir}/",
-                        file: "${reportsDir}/",
-                        includePathPattern: "**/*",  // Ensures all files in the directory are uploaded
-                        recursive: true
-                    """
+                steps {
+                    script {
+                        // Create a new directory for the reports
+                        def reportsDir = "reports-${BUILD_ID}"
+                        sh """
+                            mkdir -p ${reportsDir}
+                            cp coverage/lcov-report/index.html ${reportsDir}/lcov-report.html
+                            cp zap-reports/* ${reportsDir}/
+                            cp trivy* ${reportsDir}/
+                            cp dependency* ${reportsDir}/
+                            cp test-result.xml ${reportsDir}/
+                        """
+            
+                        // List files to ensure they are copied
+                        sh "ls -l ${reportsDir}"
+            
+                        // Use withAWS to provide credentials
+                        withAWS(credentials: 'jenkins-aws-credentials', region: 'us-east-1') {
+                            // Upload the entire directory to S3 using S3 Upload Plugin
+                            s3Upload(
+                                bucket: "${S3_BUCKET}",
+                                path: "reports/${reportsDir}/",
+                                file: "${reportsDir}/",
+                                includePathPattern: "**/*",  // Ensures all files in the directory are uploaded
+                                recursive: true
+                            )
+                        }
+                    }
                 }
-            }
-        }
-    }
 }
     post {
         always {
