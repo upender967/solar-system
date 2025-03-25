@@ -269,6 +269,22 @@ pipeline {
                         }
                     }
                 }
+        stage('Approval - Deploy to Production') {
+                when {
+                    branch 'main'
+                }
+                steps {
+                    script {
+                        timeout(time: 1, unit: 'DAYS') {  // Timeout after 1 day
+                            def userInput = input(
+                                message: 'PR Approved and ArgoCD Synced?',
+                                ok: 'Proceed',
+                                submitter: 'admin' // Only 'admin' can approve
+                            )
+                        }
+                    }
+                }
+            }
 }
     post {
         always {
