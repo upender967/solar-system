@@ -11,7 +11,9 @@ pipeline {
         MONGO_PASSWORD = credentials('db-password')
         SONAR_SCANNER_HOME = tool('SonarQube-Scanner-7.04')
         GITEA_TOKEN = credentials('tpplus-token')
-        S3_BUCKET = 'your-s3-bucket-name' // Specify your S3 bucket name
+        S3_BUCKET = 'your-s3-bucket-name' 
+        GIT_USER_EMAIL = credentials('github-user-email')
+        GIT_USER_NAME = credentials('github-user-name')
     }
 
     stages {
@@ -181,8 +183,8 @@ pipeline {
                     git clone https://$GITEA_TOKEN@github.com/khaled-projects/tpcplusplus.git tpcplusplus
         
                     cd tpcplusplus
-                    git config --global user.email "khaledneji25@gmail.com"
-                    git config --global user.name "khaled-projects"
+                    git config --global user.email "$GIT_USER_EMAIL"
+                    git config --global user.name "$GIT_USER_NAME"
         
                     sed -i "s|image: relyonlyurself/first-repo:[^ ]*|image: relyonlyurself/first-repo:$GIT_COMMIT|" kubernetes/deployment.yaml
         
