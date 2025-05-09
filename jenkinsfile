@@ -1,0 +1,111 @@
+pipeline {
+
+agent any
+
+tools {
+nodejs 'Nodejs' 
+}
+ 
+ stages{
+
+
+stage('Installing dependencies') {
+            steps {
+                
+                sh  'npm install --no-audit'
+ 
+                
+            }
+
+            
+        }
+
+   stage('Dependency scanning') {
+            steps {
+                
+        catchError(message: 'error skipped', stageResult: 'SUCCESS',buildResult: 'SUCCESS') {
+                sh  '''
+                  npm audit --audit-level=critical
+                   echo $?
+               '''
+        }
+               
+ 
+                
+            }
+        }
+
+
+
+stage('Unit test') {
+
+            steps {
+withCredentials([usernamePassword(credentialsId: 'mongodbcred', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+    sh  'npm test'
+}
+
+junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
+}
+
+                 }
+
+stage('Build Image'){
+ steps{
+
+    sh 'docker build -t anandhabadmanaban/solar-system-nodejs:$GIT_COMMIT .'
+ }
+
+               }
+
+
+    stage('Trivy build scan'){
+ steps{
+
+    sh '''
+    trivy image anandhabadmanaban/solar-system-nodejs:$GIT_COMMIT \
+    --severity CRITICAL \
+    --exit-code 0 \
+    --quiet \
+    --format json -o trivy-image-scan-report.json 
+      '''
+ }
+
+ post{
+
+always{
+  sh '''
+        trivy convert \
+        --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+        --output trivy-image-scan-report.html trivy-image-scan-report.json 
+        '''
+}
+ }
+
+               }
+
+
+stage('Docker push'){
+    steps{
+withDockerRegistry(credentialsId: 'Docker_cred', url:"") {
+    sh 'docker push  anandhabadmanaban/solar-system-nodejs:$GIT_COMMIT'
+
+}
+ }
+
+
+                      }
+
+
+                     
+
+
+}
+ post{
+                        always {
+publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: false, reportDir: '', reportFiles: 'trivy-image-scan-report.html', reportName: 'Trivy scan result', reportTitles: 'Trivy title', useWrapperFileDirectly: true])
+                        }
+
+
+                      }
+
+}
