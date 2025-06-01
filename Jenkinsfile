@@ -6,8 +6,8 @@ Pipeline {
   stages {
     stage('Node Version') {
       sh '''
-        echo "Node Version: $(node -v)"
-        echo "NPM Version: $(npm -v)"
+        node -v
+        npm -v
       '''
     }
   }
