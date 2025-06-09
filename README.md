@@ -1,10 +1,9 @@
 # Solar System NodeJS Application
-
 A simple HTML+MongoDB+NodeJS project to display Solar System and it's planets.
 
 ---
 ## Requirements
-
+dfsfds
 For development, you will only need Node.js and NPM installed in your environement.
 
 ### Node
@@ -21,7 +20,7 @@ Also, be sure to have `git` available in your PATH, `npm` might need it (You can
       $ sudo apt install npm
 
 - #### Other Operating Systems
-  You can find more information about the installation on the [official Node.js website](https://nodejs.org/) and the [official NPM website](https://npmjs.org/).
+  You can find more information about the installation on the [official Node.js website](https://nodejs./org/) and the [official NPM website](https://npmjs.org/).
 
 If the installation was successful, you should be able to run the following command.
 
