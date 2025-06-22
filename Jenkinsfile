@@ -7,14 +7,23 @@ pipeline {
   }
 
 
+
+
   stages {
+
+      stage('install dependency') {
+                steps {
+                  // --no-audit: skip only the audit step during that install.
+                  sh 'npm install --no-audit'
+                }
+        }
 
     stage("dependency scanning"){
      parallel {
-        stage('install dependency') {
+        stage('npm dependency audit') {
                 steps {
                   // --no-audit: skip only the audit step during that install.
-                  sh 'node install --no-audit'
+                  sh 'npm audit --audit-level=critical'
                 }
         }
         stage('OWASP Dependency-Check Vulnerabilities') {
