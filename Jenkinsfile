@@ -18,6 +18,12 @@ pipeline {
                 }
         }
 
+    stage('Auto Fix (Safe Upgrades)') {
+      steps {
+        sh 'npm audit fix || true' // Attempts safe fixes
+      }
+    }
+    
     stage("dependency scanning"){
      parallel {
         stage('npm dependency audit') {
