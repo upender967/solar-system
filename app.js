@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const fs = require('fs')
 const express = require('express');
@@ -17,13 +18,13 @@ mongoose.connect(process.env.MONGO_URI, {
     pass: process.env.MONGO_PASSWORD,
     useNewUrlParser: true,
     useUnifiedTopology: true
-}, function(err) {
-    if (err) {
-        console.log("error!! " + err)
-    } else {
-      console.log("MongoDB Connection Successful")
-    }
 })
+.then(() => {
+    console.log("MongoDB Connection Successful");
+})
+.catch((err) => {
+    console.log("error!! " + err);
+});
 
 var Schema = mongoose.Schema;
 

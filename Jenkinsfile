@@ -5,12 +5,13 @@ pipeline {
     nodejs "node JS"
   }
 
-  // environment {
-  //   MONGO_URI = "mongodb+srv://muskaan:StrongPassword123@d83jj.mongodb.net/solarsystemdb?retryWrites=true&w=majority"
-  // }
+  environment {
+    MONGO_URI = "mongodb://localhost:27017/solarsystemdb?authSource=admin"
+  }
 
   stages {
     stage('Install Dependency') {
+      options { timestamps () }
       steps {
         sh 'npm install --no-audit'
       }
@@ -44,27 +45,17 @@ pipeline {
       }
     }
 
-    stage('Start MongoDB with Auth') {
-      steps {
-        sh '''
-          docker run -d --name mongo-auth \
-            -e MONGO_INITDB_ROOT_USERNAME=muskaan \
-            -e MONGO_INITDB_ROOT_PASSWORD=StrongPassword123 \
-            -p 27017:27017 mongo:latest
-        '''
-      }
-    }
 
     stage('Unit Testing') {
+      //not working but added this stage
+      options { retry (2) }
       steps {
-        sh 'npm test'
+      withCredentials([usernamePassword(credentialsId: 'mongodb-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+          sh 'npm test'
+      }
+        
       }
     }
 
-    stage('Stop MongoDB') {
-      steps {
-        sh 'docker rm -f mongo-auth || true'
-      }
-    }
   }
 }
