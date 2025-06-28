@@ -57,5 +57,16 @@ pipeline {
       }
     }
 
+
+      stage('Code Coverage') {
+    
+      options { retry (2) }
+      steps {
+      withCredentials([usernamePassword(credentialsId: 'mongodb-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+          sh 'npm run coverage'
+      }
+        
+      }
+    }
   }
 }
