@@ -58,23 +58,25 @@ pipeline {
     }
 
 
-      stage('Code Coverage') {
-      steps {
-      withCredentials([usernamePassword(credentialsId: 'mongodb-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
-          catchError(buildResult: 'SUCCESS', message: 'It will be fixed later', stageResult: 'UNSTABLE') {
-               sh 'npm run coverage'
-          }
-          publishHTML(target: [
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: true,
-                    reportDir: '/coverage/lcov-report/',
-                    reportFiles: 'index.html',
-                    reportName: 'Code Coverage Report'
-                ]) 
-      }
-        
-      }
+    stage('Code Coverage') {
+        steps {
+            withCredentials([usernamePassword(credentialsId: 'mongodb-credentials', passwordVariable: 'MONGO_PASSWORD',usernameVariable: 'MONGO_USERNAME')]) {
+                catchError(buildResult: 'SUCCESS', message: 'It will be fixed later', stageResult: 'UNSTABLE') {
+                    sh 'npm run coverage'
+                }
+            }
+
+              publishHTML(target: [
+                              allowMissing: false,
+                              alwaysLinkToLastBuild: true,
+                              keepAll: true,
+                              reportDir: '/coverage/lcov-report/',
+                              reportFiles: 'index.html',
+                              reportName: 'Code Coverage Report'
+                          ]) 
+          
+        }
     }
-  }
-}
+
+  } 
+}  
