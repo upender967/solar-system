@@ -72,7 +72,7 @@ pipeline {
                               keepAll: true,
                               reportDir: '/coverage/lcov-report/',
                               reportFiles: 'index.html',
-                              reportName: 'Code Coverage Report'
+                              reportName: 'Code Coverage Html Report'
                           ]) 
           
         }
