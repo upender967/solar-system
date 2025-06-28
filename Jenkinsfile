@@ -17,11 +17,11 @@ pipeline {
       }
     }
 
-    stage('Auto Fix (Safe Upgrades)') {
-      steps {
-        sh 'npm audit fix || true'
-      }
-    }
+    // stage('Auto Fix (Safe Upgrades)') {
+    //   steps {
+    //     sh 'npm audit fix || true'
+    //   }
+    // }
 
     stage('Dependency Scanning') {
       parallel {
