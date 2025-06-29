@@ -66,7 +66,14 @@ pipeline {
                 }
             }
 
-              publishHTML(target: [
+
+          
+        }
+    }
+
+    post {
+      always {
+                      publishHTML(target: [
                               allowMissing: false,
                               alwaysLinkToLastBuild: true,
                               keepAll: true,
@@ -74,9 +81,18 @@ pipeline {
                               reportFiles: 'index.html',
                               reportName: 'Code Coverage Html Report'
                           ]) 
-          
-        }
+
+                                        publishHTML(target: [
+                              allowMissing: false,
+                              alwaysLinkToLastBuild: true,
+                              keepAll: true,
+                              reportDir: './',
+                              reportFiles: 'dependency-check-report.html',
+                              reportName: 'Oswao dependency check report'
+                          ]) 
+      }
     }
+
 
   } 
 }  
