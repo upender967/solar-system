@@ -71,7 +71,10 @@ pipeline {
         }
     }
 
-    post {
+  
+  } 
+
+  post {
       always {
                       publishHTML(target: [
                               allowMissing: false,
@@ -92,7 +95,4 @@ pipeline {
                           ]) 
       }
     }
-
-
-  } 
 }  
