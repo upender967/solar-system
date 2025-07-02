@@ -5,9 +5,10 @@ pipeline {
     nodejs "node JS"
   }
 
-  environment {
-    MONGO_URI = "mongodb://localhost:27017/solarsystemdb?authSource=admin"
-  }
+environment {
+  MONGO_URI = "mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@localhost:27017/solarsystemdb?authSource=admin"
+}
+
 
   stages {
     stage('Install Dependency') {
