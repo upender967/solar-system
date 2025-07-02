@@ -5,8 +5,8 @@ pipeline {
     nodejs "node JS"
   }
 
-environment {
-  MONGO_URI = "mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@localhost:27017/solarsystemdb?authSource=admin"
+ environment {
+  MONGO_URI = "mongodb://muskaan:StrongPassword123@192.168.0.108:27017/solarsystemdb?authSource=admin"
 }
 
 
