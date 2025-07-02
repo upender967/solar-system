@@ -70,7 +70,7 @@ pipeline {
     }
 
     stage (" Building docker image"){
-      step{
+      steps{
         sh "docker build -t muskaan810/nodemongoapp:$GIT_COMMIT"
       }
     }
@@ -78,7 +78,7 @@ pipeline {
 
     stage ("push to registry")
     {
-      step {
+      steps{
         // for this docker registry one , docker pipeline plugins needs to be installed in jenkins
         withDockerRegistry(credentialsId: 'dockerhub-credentials', url: '""') {
            sh "docker push -t muskaan810/nodemongoapp:$GIT_COMMIT"
