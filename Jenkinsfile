@@ -109,6 +109,7 @@ pipeline {
                               reportFiles: 'dependency-check-report.html',
                               reportName: 'Oswao dependency check report'
                           ]) 
+                          cleanWs()
       }
     }
 }  
