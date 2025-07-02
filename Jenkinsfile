@@ -47,7 +47,6 @@ pipeline {
 
 
     stage('Unit Testing') {
-      //not working but added this stage
       options { retry (2) }
       steps {
       withCredentials([usernamePassword(credentialsId: 'mongodb-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
