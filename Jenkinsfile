@@ -65,10 +65,26 @@ pipeline {
                     sh 'npm run coverage'
                 }
             }
-
-
           
         }
+    }
+
+    stage (" Building docker image"){
+      step{
+        sh "docker build -t muskaan810/nodemongoapp:$GIT_COMMIT"
+      }
+    }
+
+
+    stage ("push to registry")
+    {
+      step {
+        // for this dockerregistry one , docket pipeline plugins needs to be downloaded
+        withDockerRegistry(credentialsId: 'dockerhub-credentials', url: '""') {
+           sh "docker push -t muskaan810/nodemongoapp:$GIT_COMMIT"
+          }
+        
+      }
     }
 
   
