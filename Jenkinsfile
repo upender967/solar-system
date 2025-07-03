@@ -6,7 +6,7 @@ pipeline {
   }
 
  environment {
-  MONGO_URI = "mongodb://muskaan:StrongPassword123@localhost:27017/solarsystemdb?authSource=admin"
+  MONGO_URI = "mongodb://muskaan:StrongPassword123@192.168.0.108:27017/solarsystemdb?authSource=admin"
 }
 
 
