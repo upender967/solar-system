@@ -11,6 +11,14 @@ pipeline {
 
 
   stages {
+
+    stage("checking url")
+    {
+          steps {
+      echo "Mongo URI: ${env.MONGO_URI}"
+      sh 'echo $MONGO_URI' // inside shell
+    }
+    }
     stage('Install Dependency') {
       options { timestamps () }
       steps {
