@@ -19,6 +19,12 @@ pipeline {
       sh 'echo $MONGO_URI' // inside shell
     }
     }
+
+    stage('Test MongoDB Connection') {
+  steps {
+    sh 'nc -zv 192.168.0.108 27017 || echo "MongoDB not reachable!"'
+  }
+}
     stage('Install Dependency') {
       options { timestamps () }
       steps {
