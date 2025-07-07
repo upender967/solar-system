@@ -78,16 +78,16 @@ pipeline {
     }
 
 
-    stage ("push to registry")
-    {
-      steps{
-        // for this docker registry one , docker pipeline plugins needs to be installed in jenkins
-        withDockerRegistry(credentialsId: 'dockerhub-credentials', url: '""') {
-           sh "docker push -t muskaan810/nodemongoapp:$GIT_COMMIT"
+    stage("Push to Registry") {
+      steps {
+        script {
+          withDockerRegistry(credentialsId: 'dockerhub-credentials', url: 'https://index.docker.io/v1/') {
+            sh "docker push muskaan810/nodemongoapp:$GIT_COMMIT"
           }
-        
+        }
       }
     }
+
 
   
   } 
