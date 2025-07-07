@@ -6,25 +6,13 @@ pipeline {
   }
 
  environment {
-  MONGO_URI = "mongodb://muskaan:StrongPassword123@192.168.0.108:27017/solarsystemdb?authSource=admin"
+  MONGO_URI = "mongodb://muskaan:StrongPassword123@172.23.80.1:27017/solarsystemdb?authSource=admin"
 }
 
 
   stages {
 
-    stage("checking url")
-    {
-          steps {
-      echo "Mongo URI: ${env.MONGO_URI}"
-      sh 'echo $MONGO_URI' // inside shell
-    }
-    }
-
-    stage('Test MongoDB Connection') {
-  steps {
-    sh 'nc -zv 192.168.0.108 27017 || echo "MongoDB not reachable!"'
-  }
-}
+    
     stage('Install Dependency') {
       options { timestamps () }
       steps {
