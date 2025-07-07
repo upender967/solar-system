@@ -73,7 +73,7 @@ pipeline {
 
     stage (" Building docker image"){
       steps{
-        sh "docker build -t muskaan810/nodemongoapp:$GIT_COMMIT"
+        sh "docker build -t muskaan810/nodemongoapp:$GIT_COMMIT ."
       }
     }
 
