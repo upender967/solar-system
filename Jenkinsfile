@@ -88,6 +88,16 @@ pipeline {
       }
     }
 
+    //   stage("Push to Registry") {
+    //   steps {
+    //     script {
+    //       withDockerRegistry(credentialsId: 'dockerhub-credentials', url: 'https://index.docker.io/v1/') {
+    //         sh "docker push muskaan810/nodemongoapp:$GIT_COMMIT"
+    //       }
+    //     }
+    //   }
+    // }
+
 
   
   } 
