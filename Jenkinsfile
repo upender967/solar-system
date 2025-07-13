@@ -6,7 +6,7 @@ pipeline {
   }
 
  environment {
-  mongo_uri = credentials("mongo-uri")
+  MONGO_URI = credentials("mongo-uri")
   mongodb_credentials= credentials("mongodb-credentials")
   mongodb_username= credentials("mongodb-username")
   mongodb_password= credentials("mongodb-password")
@@ -107,7 +107,7 @@ pipeline {
                           echo "Container stopped and removed."
                       fi
                       sudo docker run --name nodemongoappcont\
-                        -e MONGO_URI=$mongo-uri \
+                        -e MONGO_URI=$MONGO_URI \
                         -e MONGO_USERNAME=$mongodb_username \
                         -e MONGO_PASSWORD=$mongodb_password \
                         -p 3000:3000 -d muskaan810/nodemongoapp:$GIT_COMMIT
