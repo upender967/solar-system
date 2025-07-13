@@ -91,20 +91,11 @@ pipeline {
       }
     }
 
-      stage("Push to Registry") {
-      steps {
-        script {
-          withDockerRegistry(credentialsId: 'dockerhub-credentials', url: 'https://index.docker.io/v1/') {
-            sh "docker push muskaan810/nodemongoapp:$GIT_COMMIT"
-          }
-        }
-      }
-    }
-
     stage("Deploy to AWS-EC2") {
       when {
         branch 'feature/*'
       }
+
       steps {
         script {
          sshagent(['EC2-privatekey']) {
@@ -115,15 +106,14 @@ pipeline {
                           sudo docker stop "nodemongoappcont" && sudo docker rm "nodemongoappcont"
                           echo "Container stopped and removed."
                       fi
-                      sudo docker run --name solar-system \
+                      sudo docker run --name nodemongoappcont\
                         -e MONGO_URI=$mongo-uri \
                         -e MONGO_USERNAME=$mongodb_username \
                         -e MONGO_PASSWORD=$mongodb_password \
                         -p 3000:3000 -d muskaan810/nodemongoapp:$GIT_COMMIT
                   "
               '''
-            
-
+    
           }
         }
       }
