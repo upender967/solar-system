@@ -10,6 +10,7 @@ pipeline {
   mongodb_credentials= credentials("mongodb-credentials")
   mongodb_username= credentials("mongodb-username")
   mongodb_password= credentials("mongodb-password")
+  github_token =credentials('github_token')
 }
 
 
@@ -117,7 +118,38 @@ pipeline {
           }
         }
       }
-    }
+
+      stage("k8-image updater Tag") {
+        when {
+          branch 'PR*'
+        }
+        steps {
+          script {
+            sh "git clone -b main https://github.com/muskaanbhatia30/solar-system-manifest"
+
+            dir("solar-system-manifest/kubernetes") {
+              sh '''
+                git checkout main
+                git checkout -b feature-$BUILD_ID
+
+                # Replace Docker Image Tag
+                sed -i "s#muskaan810.*#muskaan810/nodemongoapp:$GIT_COMMIT#g" deployment.yaml
+
+                cat deployment.yaml
+
+                # Git Config and Push
+                git config --global user.email "2019pietcsmuskaan103@poornima.org"
+                git config --global user.name "muskaanbhatia30"
+                git remote set-url origin https://$github_token@github.com/muskaanbhatia30/solar-system-manifest.git
+                git add .
+                git commit -m "Updated docker image"
+                git push -u origin feature-$BUILD_ID
+              '''
+            }
+          }
+        }
+      }
+
 
 
   
@@ -125,6 +157,11 @@ pipeline {
 
   post {
       always {
+        script {
+            if (fileExist("solar-system-manifest")) {
+            sh " rm -rf solar-system-manifest"
+          }
+        }
                       publishHTML(target: [
                               allowMissing: false,
                               alwaysLinkToLastBuild: true,
