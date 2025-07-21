@@ -156,8 +156,8 @@ pipeline {
   post {
       always {
         script {
-            if (fileExist("solar-system-manifest")) {
-            sh " rm -rf solar-system-manifest"
+            if(fileExists("solar-system-manifest")) {
+            sh "rm -rf solar-system-manifest"
           }
         }
                       publishHTML(target: [
