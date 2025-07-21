@@ -101,7 +101,7 @@ pipeline {
           script {
           sshagent(['EC2-privatekey']) {
             sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@44.201.249.132 "
+                    ssh -o StrictHostKeyChecking=no ubuntu@18.205.113.142 "
                         if sudo docker ps -a | grep -q "nodemongoappcont"; then
                             echo "Container found. Stopping..."
                             sudo docker stop "nodemongoappcont" && sudo docker rm "nodemongoappcont"
