@@ -10,7 +10,7 @@ pipeline {
   mongodb_credentials= credentials("mongodb-credentials")
   mongodb_username= credentials("mongodb-username")
   mongodb_password= credentials("mongodb-password")
-  github_token =credentials('github_token')
+  github_token =credentials('githubcredentails')
 }
 
 
