@@ -153,7 +153,7 @@ pipeline {
         }
     }
 
-    stage( " Raise Manifest-PR*"){
+    stage( " Raise Manifest-PR"){
        when {
           branch 'PR*'
         }
