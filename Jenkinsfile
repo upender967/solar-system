@@ -158,7 +158,7 @@ pipeline {
           branch 'PR*'
         }
       steps{
-         sh """
+         sh '''
            curl -L \
           -X POST \
           -H "Accept: application/vnd.github+json" \
@@ -172,7 +172,7 @@ pipeline {
               "base":"main"
             }'
          
-         """
+         '''
       }
     }
 
