@@ -53,6 +53,8 @@ pipeline {
       }
 
 
+
+
       stage('Unit Testing') {
         options { retry (2) }
         steps {
@@ -149,7 +151,31 @@ pipeline {
             }
           }
         }
+    }
+
+    stage( " Raise Manifest-PR*"){
+       when {
+          branch 'PR*'
+        }
+      steps{
+         sh """
+           curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $github_token" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/muskaanbhatia30/solar-system-manifest/pulls \
+            -d '{
+              "title":"Amazing new feature",
+              "body":"Please pull these awesome changes in!",
+              "head":"feature-$build_ID",
+              "base":"main"
+            }'
+         
+         """
       }
+    }
+
 
   } 
 
