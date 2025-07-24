@@ -128,7 +128,7 @@ pipeline {
         }
         steps {
           script {
-            withCredentials([usernamePassword(credentialsId: 'mongodb-credentials', passwordVariable: 'MONGO_PASSWORD',usernameVariable: 'MONGO_USERNAME')])
+      
             sh "git clone -b main https://github.com/muskaanbhatia30/solar-system-manifest"
 
             dir("solar-system-manifest/kubernetes") {
