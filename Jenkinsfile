@@ -128,6 +128,7 @@ pipeline {
         }
         steps {
           script {
+            withCredentials([usernamePassword(credentialsId: 'mongodb-credentials', passwordVariable: 'MONGO_PASSWORD',usernameVariable: 'MONGO_USERNAME')])
             sh "git clone -b main https://github.com/muskaanbhatia30/solar-system-manifest"
 
             dir("solar-system-manifest/kubernetes") {
@@ -153,29 +154,31 @@ pipeline {
         }
     }
 
-    stage("Raise Manifest-PR"){
-      when {
-        branch 'PR*'
-      }
+      stage("Raise Manifest‑PR") {
+      when { branch 'PR*' }
       steps {
-          script {
-            sh """
-              echo "${github_token}"
-              curl -L -X POST \
-                -H 'Accept: application/vnd.github+json' \
-                -H 'Authorization: Bearer ${github_token}'  \
-                -H 'X-GitHub-Api-Version: 2022-11-28' \
-                https://api.github.com/repos/muskaanbhatia30/solar-system-manifest/pulls \
-                -d '{
-                  "title":"Amazing new feature",
-                  "body":"Please pull these awesome changes in!",
-                  "head":"feature-${BUILD_ID}",
-                  "base":"main"
-                }'
-            """
-          }
+        withCredentials([usernamePassword(
+          credentialsId: 'githubcredentails',  // <-- your credential ID
+          usernameVariable: 'GITHUB_USER',
+          passwordVariable: 'GITHUB_TOKEN'
+        )]) {
+          sh """
+            echo "Repo push will use GitHub user: \$GITHUB_USER"
+            curl -L -X POST \\
+              -H "Accept: application/vnd.github+json" \\
+              -H "Authorization: Bearer \$GITHUB_TOKEN" \\
+              -H "X-GitHub-Api-Version: 2022-11-28" \\
+              https://api.github.com/repos/muskaanbhatia30/solar-system-manifest/pulls \\
+              -d '{
+                "title": "Amazing new feature",
+                "body": "Automated PR from Jenkins build #${BUILD_ID}",
+                "head": "feature-${BUILD_ID}",
+                "base": "main"
+              }'
+          """
         }
       }
+    }
 
 
   } 
