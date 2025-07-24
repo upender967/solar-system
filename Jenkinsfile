@@ -160,9 +160,10 @@ pipeline {
       steps {
         withCredentials([string(credentialsId: 'githubcredentails', variable: 'github_token')]) {
           sh """
+            echo "github_token"
             curl -L -X POST \
               -H 'Accept: application/vnd.github+json' \
-              -H 'Authorization: Bearer \$GITHUB_TOKEN' \
+              -H 'Authorization: Bearer \$github_token' \
               -H 'X-GitHub-Api-Version: 2022-11-28' \
               https://api.github.com/repos/muskaanbhatia30/solar-system-manifest/pulls \
               -d '{
