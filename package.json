@@ -1,5 +1,5 @@
 {
-  "name": "Solar System",
+  "name": "solar-system",
   "version": "6.7.6",
   "author": "Siddharth Barahalikar <barahalikar.siddharth@gmail.com>",
   "homepage": "https://www.linkedin.com/in/barahalikar-siddharth/",
@@ -15,15 +15,18 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
     "express": "^4.18.2",
-    "mocha-junit-reporter": "^2.2.1",
-    "mongoose": "5.13.20",
+    "glob": "^11.0.3",
+    "mocha-junit-reporter": "^2.0.0",
+    "mongoose": "^8.18.2",
     "nyc": "^15.1.0",
+    "rimraf": "^6.0.1",
     "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "chai": "*",
     "chai-http": "*",
-    "mocha": "*"
+    "mocha": "^11.7.2"
   }
 }
