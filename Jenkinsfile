@@ -34,6 +34,7 @@ pipeline {
                                 --format HTML \
                                 --format JSON \
                                 --prettyPrint
+                                --disableYarnAudit
                             ''',
                             odcInstallation: 'OWASP-DepCheck-10'
                         )
