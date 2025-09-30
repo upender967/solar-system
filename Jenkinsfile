@@ -6,19 +6,41 @@ pipeline {
     }
 
     stages {
-        stage('VM Node Version') {
+        stage('Install Dependencies') {
             steps {
                 sh 'npm install --no-audit'
             }
         }
 
-        stage('NPM Dependency Audit') {
-            steps {
-                sh '''
-                    npm audit --audit-level=critical
-                    echo $?
-                '''
+        stage('Dependency Scanning') {
+            parallel {
+                stage('NPM Dependency Audit') {
+                    steps {
+                        sh '''
+                            set +e
+                            npm audit --audit-level=critical
+                            echo "npm audit exit code: $?"
+                            set -e
+                        '''
+                    }
+                }
+
+                stage('OWASP Dependency Check') {
+                    steps {
+                        dependencyCheck(
+                            additionalArguments: '''
+                                --scan ./ \
+                                --out ./ \
+                                --format HTML \
+                                --format JSON \
+                                --prettyPrint
+                            ''',
+                            odcInstallation: 'OWASP-DepCheck-10'
+                        )
+                    }
+                }
             }
         }
     }
 }
+
