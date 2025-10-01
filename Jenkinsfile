@@ -5,6 +5,10 @@ pipeline {
         nodejs 'nodejs-24-9-0'
     }
 
+    environment {
+        MONGO_URI = 'mongodb://mujtaba:Jameel@1480@localhost:27017/?authSource=admin'
+    }
+
     stages {
         stage('Install Dependencies') {
             steps {
@@ -29,26 +33,58 @@ pipeline {
                     steps {
                         dependencyCheck(
                             additionalArguments: '''
-                                --scan ./ \
-                                --out ./ \
-                                --format \'ALL\'
-                                --prettyPrint
+                                --scan ./\
+                                --out ./\
+                                --format ALL\
+                                --prettyPrint\
                                 --disableYarnAudit
                             ''',
                             odcInstallation: 'OWASP-DepCheck-10'
                         )
-                        dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml', stopBuild: true
 
-                        junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: 'dependency-check-junit.xml'
+                        dependencyCheckPublisher(
+                            failedTotalCritical: 1,
+                            pattern: 'dependency-check-report.xml',
+                            stopBuild: true
+                        )
 
-                        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'dependency-check-HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        junit(
+                            allowEmptyResults: true,
+                            stdioRetention: 'ALL',
+                            testResults: 'dependency-check-junit.xml'
+                        )
+
+                        publishHTML([
+                            allowMissing: true,
+                            alwaysLinkToLastBuild: true,
+                            icon: '',
+                            keepAll: true,
+                            reportDir: './',
+                            reportFiles: 'dependency-check-jenkins.html',
+                            reportName: 'dependency-check-HTML Report',
+                            reportTitles: '',
+                            useWrapperFileDirectly: true
+                        ])
                     }
                 }
             }
         }
+
         stage('Unit Testing') {
             steps {
-                sh 'npm test'
+                withCredentials([usernamePassword(
+                    credentialsId: 'mongodb-creds',
+                    passwordVariable: 'MONGO_PASSWORD',
+                    usernameVariable: 'MONGO_USERNAME'
+                )]) {
+                    sh 'npm test'
+                }
+
+                junit(
+                    allowEmptyResults: true,
+                    stdioRetention: 'ALL',
+                    testResults: 'test-results.xml'
+                )
             }
         }
     }
