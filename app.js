@@ -7,13 +7,10 @@ const mongoose = require("mongoose");
 const app = express();
 const cors = require('cors')
 const serverless = require('serverless-http')
-const DB_URI = 'mongodb://mujtaba:Jameel%401480@127.0.0.1:27017/solarSystemDB';
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
 app.use(cors())
-
-const mongoose = require('mongoose');
 
 mongoose.connect(process.env.MONGO_URI, {
   user: process.env.MONGO_USERNAME,
