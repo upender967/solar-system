@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        MONGO_URI = "mongodb://mujtaba:Jameel@1480@localhost:27017/?authSource=admin"
+        MONGO_URI = "mongodb://mujtaba:Jameel123@localhost:27017/solarSystemDB?authSource=solarSystemDB"
     }
 
     stages {
@@ -82,7 +82,7 @@ pipeline {
 
                 junit(
                     allowEmptyResults: true,
-                    stdioRetention: 'ALL',
+                    stdioRetention: '',
                     testResults: 'test-results.xml'
                 )
             }
