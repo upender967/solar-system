@@ -4,3 +4,6 @@ solar-system.png
 .talismanrc
 coverage
 test-results.xml
+data/
+.env
+.env.*

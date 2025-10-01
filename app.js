@@ -1,29 +1,50 @@
 const path = require('path');
-const fs = require('fs')
+const fs = require('fs');
 const express = require('express');
 const OS = require('os');
 const bodyParser = require('body-parser');
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const cors = require('cors');
+const serverless = require('serverless-http');
+require('dotenv').config();
+const PORT = process.env.PORT || 3000;
+
+
+
 const app = express();
-const cors = require('cors')
-const serverless = require('serverless-http')
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
-app.use(cors())
+app.use(cors());
 
-mongoose.connect(process.env.MONGO_URI, {
-  user: process.env.MONGO_USERNAME,
-  pass: process.env.MONGO_PASSWORD,
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}, (err) => {
-  if (err) {
-    console.error('❌ MongoDB Connection Error:', err);
-  } else {
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      user: process.env.MONGO_USERNAME,
+      pass: process.env.MONGO_PASSWORD,
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
     console.log('✅ MongoDB Connection Successful');
+
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
+    }).on('error', err => {
+      if (err.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${PORT} is already in use. Try a different one.`);
+        process.exit(1);
+      } else {
+        throw err;
+      }
+    });
+
+
+  } catch (err) {
+    console.error('❌ MongoDB Connection Error:', err);
   }
-});
+}
+
+startServer();
 
 
 var Schema = mongoose.Schema;
@@ -91,7 +112,7 @@ app.get('/ready',   function(req, res) {
     });
 })
 
-app.listen(3000, () => { console.log("Server successfully running on port - " +3000); })
-module.exports = app;
+// app.listen(3002, () => { console.log("Server successfully running on port - " +3002); })
+// module.exports = app;
 
 //module.exports.handler = serverless(app)
