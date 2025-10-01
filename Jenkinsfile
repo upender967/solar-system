@@ -73,7 +73,7 @@ pipeline {
         stage('Unit Testing') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'mongodb-creds',
+                    credentialsId: 'mongodb_creds',
                     passwordVariable: 'MONGO_PASSWORD',
                     usernameVariable: 'MONGO_USERNAME'
                 )]) {
