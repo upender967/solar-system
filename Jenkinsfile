@@ -12,7 +12,7 @@ pipeline {
             }
         }
         stage('NPM Dependency Audit') {
-            stegps {
+            steps {
                 sh '''
                     npm audit --audit-level=critical
                     echo $?
