@@ -8,6 +8,8 @@ pipeline {
                 sh '''
                     node -v
                     npm -v
+                    git --version
+                
                 '''
             }
         }
